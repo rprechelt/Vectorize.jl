@@ -3,7 +3,7 @@ if Sys.ARCH != :x86_64
 end
 
 @osx_only begin
-    if Pkg.installed("AppleAccelerate") != ""
+    if Pkg.installed("AppleAccelerate") != Void
         info("AppleAccelerate installation found.")
     else
         info("Installing AppleAccelerate.jl")
@@ -59,16 +59,15 @@ module into current scope.
 function addpackage(name::ASCIIString)
 
     if prompt_yn("Would you like to install $(name).jl?")
-        if Pkg.installed(name) != ""
+        if Pkg.installed(name) != Void
+            info("$(name).jl already installed.")
+        else
             info("Installing $(name).jl...")
             @eval Pkg.add($(name))
             if !addrequirement(name)
                 warn("$(name).jl may not have successfully been added to REQUIRE")
             end
             info("$(name).jl installed.")
-
-        else
-            info("$(name).jl already installed.")
         end
     else
         info("$(name) will not be installed.")
