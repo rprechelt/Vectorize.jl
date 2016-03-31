@@ -59,7 +59,7 @@ module into current scope.
 function addpackage(name::ASCIIString)
 
     if prompt_yn("Would you like to install $(name).jl?")
-        if Pkg.installed(name) != Void
+        if typeof(Pkg.installed(name)) != Void
             info("$(name).jl already installed.")
         else
             info("Installing $(name).jl...")
@@ -80,3 +80,4 @@ end
 ### RUN ###
 addpackage("Yeppp")
 addpackage("VML")
+info("Vectorize.jl successfully installed.")
