@@ -1,6 +1,7 @@
 module Vectorize
 
-include("submodules/yeppp.jl")
+include("submodules/accelerate.jl")
 include("submodules/vml.jl")
+include("submodules/yeppp.jl")
 
 end # module

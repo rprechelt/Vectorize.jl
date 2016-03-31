@@ -14,7 +14,10 @@ if typeof(Pkg.installed("AppleAccelerate")) != Void
                                     :asinh => :asinh, :atanh => :atanh,  :cosh => :cosh, :sinh => :sinh,
                                     :tanh => :tanh,  :sqrt => :sqrt, :exp => :exp, :log => :log,
                                     :log10 => :log10,  :log1p => :log1p,  :abs => :abs,  :abs2 => :abs2,
-                                    :ceil => :ceil, :floor => :floor,  :round => :round, :trunc => :trunc)
+                                    :ceil => :ceil, :floor => :floor,  :round => :round, :trunc => :trunc,
+                                    :vadd => :vadd, :vsub => :vsub, :vmul => :vmul, :vdiv => :vdiv, :mean => :mean,
+                                    :sum => :sum, :meanmag => :meanmag,  :meansqr => :meansqr, :minimum => :minimum,
+                                    :maximum => :maximum, :findmin => :findmin, :findmax => :findmax)
 
     for f in keys(mappings)
         @eval $f = AppleAccelerate.$(mappings[f])
