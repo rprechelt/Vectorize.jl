@@ -1,5 +1,6 @@
 module Vectorize
 
-# package code goes here
+include("submodules/yeppp.jl")
+include("submodules/vml.jl")
 
 end # module
