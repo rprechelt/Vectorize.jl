@@ -427,7 +427,7 @@ static jl_value_t *eval(jl_value_t *e, jl_value_t **locals, jl_lambda_info_t *la
         return (jl_value_t*)jl_nothing;
     }
     else if (ex->head == vectorize_sym) {
-        jl_error("attempting to interpret vectorize");
+        jl_error("Vectorize does not support interpreted expressions.");
         return (jl_value_t*)jl_nothing;
     }
     else if (ex->head == meta_sym) {
