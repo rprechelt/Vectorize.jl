@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.4)
 ## VECTORIZE ##
 project(Vectorize)
 add_subdirectory(Vectorize)
+## Use VEC_JULIA_DIR if defined
 if (DEFINED ENV{VEC_JULIA_DIR})
    set(VEC_JULIA_DIR $ENV{VEC_JULIA_DIR})
 else()
