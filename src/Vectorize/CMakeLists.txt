@@ -3,18 +3,24 @@ cmake_minimum_required(VERSION 3.4)
 ## VECTORIZE ##
 project(Vectorize)
 add_subdirectory(Vectorize)
+if (DEFINED ENV{VEC_JULIA_DIR})
+   set(VEC_JULIA_DIR $ENV{VEC_JULIA_DIR})
+else()
+   set(VEC_JULIA_DIR ".julia")
+endif()
+
 
 ## Since we are building against the Julia-installed LLVM, we must manually locate LLVM in
 ## case it isn't in the users PATH (likely). 
-set(LLVM_DIR "/Users/rprechelt/julia5/deps/build/llvm-3.7.1/build_Release")
-set(CMAKE_MODULE_PATH "/Users/rprechelt/julia5/deps/srccache/llvm-3.7.1/cmake/modules")
+set(LLVM_DIR "$ENV{HOME}/${VEC_JULIA_DIR}/deps/build/llvm-3.7.1/build_Release")
+set(CMAKE_MODULE_PATH "$ENV{HOME}/${VEC_JULIA_DIR}/deps/srccache/llvm-3.7.1/cmake/modules")
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 
 ## Include Julia LLVM source directories
-include_directories("/Users/rprechelt/julia5/deps/build/llvm-3.7.1/build_Release/include")
-include_directories("/Users/rprechelt/julia5/deps/srccache/llvm-3.7.1/include")
+include_directories("$ENV{HOME}/${VEC_JULIA_DIR}/deps/build/llvm-3.7.1/build_Release/include")
+include_directories("$ENV{HOME}/${VEC_JULIA_DIR}/deps/srccache/llvm-3.7.1/include")
 
 ## Print included directories to log for debug purposes
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
