@@ -4,4 +4,5 @@ all:
 
 .PHONY: clean
 clean:
-	rm -rf build/*
+	rm -rf build configure.out
+
