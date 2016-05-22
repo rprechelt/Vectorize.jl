@@ -7,7 +7,6 @@ add_subdirectory(Vectorize)
 ## Since we are building against the Julia-installed LLVM, we must manually locate LLVM in
 ## case it isn't in the users PATH (likely). 
 set(LLVM_DIR "/Users/rprechelt/julia5/deps/build/llvm-3.7.1/build_Release")
-set(CMAKE_PREFX_PATH "/Users/rprechelt/julia5/deps/srccache/llvm-3.7.1/cmake")
 set(CMAKE_MODULE_PATH "/Users/rprechelt/julia5/deps/srccache/llvm-3.7.1/cmake/modules")
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
