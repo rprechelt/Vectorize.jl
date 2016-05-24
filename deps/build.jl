@@ -5,7 +5,7 @@
 ############################### #########################################
 
 """
-`trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")` :: ASCIIString
+`trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
 This function attemps to run the shell command specified by `cmd` using `run`.
 If `cmd` returns successfully, it will print `msg` using info().
 If `readall(cmd)` throws an exception (the shell command returns non-zero),
@@ -24,7 +24,7 @@ function trycmd(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
 end
 
 """
-`trycmd_read(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")` :: ASCIIString
+`trycmd_read(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
 This function attemps to run the shell command specified by `cmd` using `readall`.
 If `cmd` returns successfully, it will return its result to the caller and print `msg`.
 If `readall(cmd)` throws an exception (the shell command returns non-zero),
@@ -40,10 +40,28 @@ function trycmd_read(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
     end
 end
 
+"""
+`prompt_yn(prompt::ASCIIString)::Bool`
+
+Prompts the user for a y or n response (y/n). Continually prompts
+until user enters a valid response. Prompt string should be provided without
+colon and whitespace.
+"""
+function prompt_yn(prompt::ASCIIString)
+    print(prompt, " [y/n]:  ")
+    input = chomp(readline())
+    while input != "y" && input != "n"
+        print("You did not enter y or n. Please enter a valid response: [y/n]  ")
+        input = chomp(readline())
+    end
+
+    return (input == "y") ? true : false
+end
+
 
 #### DEPENDENCIES ####
-## We first check whether all dependencies are available on the system
-deps = ["cmake", "julia"]
+## We first check whether all binary dependencies are available on the system
+deps = ["cmake"]
 for dep in deps
     err = ("$dep is not installed. Please install $dep, ensure that it is in your"*
            "PATH,  and run Pkg.build(\"Vectorize\") again.")
