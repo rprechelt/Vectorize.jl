@@ -1,6 +1,15 @@
 # Vectorize
 
-This package is under heavy development but it is not currently operational; do not attempt to install this package. It will only give you nightmares... This notice will be removed as soon as Vectorize.jl can reliably be installed, and the code base has become somewhat stable.
+This package is under **heavy** development but it is **not** currently operational; do **not** attempt to **install** this package. It will only give you *nightmares*... This notice **will** be removed as soon as Vectorize.jl can reliably be installed, and the code base has become somewhat stable.
+
+## Features
+Currently, Vectorize.jl only provides direct access to array-oriented functions in Apple's Accelerate, Intel's VML, and Yeppp! These can be accessed using `Vectorize.LibraryName.Function()` i.e. 
+
+    Vectorize.Accelerate.log(X)
+    Vectorize.VML.log(X)
+    Vectorize.Yeppp!.log(x)
+
+These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 100-fold improvements are common for functions throughout the three libraries. Any attempt to call a function that is not supported by that particular library will silently fall back to the native Julia base implementation. 
 
 ## Installation
 #### Julia

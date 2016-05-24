@@ -1,5 +1,7 @@
 module Accelerate
 
+const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
+
 ## This defines the mapping between Julia function names and Accelerate names. Each tuple is of the form
 ## (:julia_name, :accelerate_name). The accelerate names are stored without type suffix; it is assumed that
 ## there is no suffix for Float32, and "D" suffix for Float64. 
@@ -38,7 +40,7 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
         f! = symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T})
-                out = Vector($T,size(X))
+                out = similar(X)
                 ($f!)(out, X)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T})
