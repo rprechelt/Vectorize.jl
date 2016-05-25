@@ -1,3 +1,4 @@
 __precompile__()
-module Yeppp
+baremodule Yeppp!
+
 end # End Module

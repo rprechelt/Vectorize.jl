@@ -12,7 +12,7 @@ Currently, Vectorize.jl only provides direct access to array-oriented functions 
     Vectorize.VML.log(X)
     Vectorize.Yeppp!.log(x)
 
-These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 100-fold improvements are common for functions throughout the three libraries. Any attempt to call a function that is not supported by that particular library will silently fall back to the native Julia base implementation. 
+These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 100-fold improvements are common for functions throughout the three libraries. Any attempt to call a function that is not supported by that particular library will result in an error; this is to allow the programmer specific knowledge of which functions are being vectorized, and which are not. 
 
 ## Installation
 #### Julia

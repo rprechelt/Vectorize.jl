@@ -1,5 +1,5 @@
 __precompile__()
-module Accelerate
+baremodule Accelerate
 
 const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 
@@ -84,7 +84,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
                 return ($f!)(out, X, Y)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
-                ccall(($(string("vDSP", f,suff)),libacc),Void,
+                ccall(($(string("vDSP_", f,suff)),libacc),Void,
                       (Ptr{$T},Cint, Ptr{$T}, Cint, Ptr{$T}, Cint, Cint),
                       X, 1, Y, 1, out, 1, length(X))
                 return out 

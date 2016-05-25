@@ -1,3 +1,4 @@
 __precompile__()
-module VML
+baremodule VML
+
 end # End Module
