@@ -1,5 +1,5 @@
-__precompile__()
-baremodule Accelerate
+#__precompile__()
+module Accelerate
 
 const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 
@@ -47,7 +47,7 @@ const vecLibFunctions =
 for (T, suff) in ((Float64, ""), (Float32, "f"))
 
     for (f, fa) in vecLibFunctions
-        f! = symbol("$(f)!")
+        f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = similar(X)
@@ -77,7 +77,7 @@ const vDSPFunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmu
 for (T, suff) in ((Float64, "D"), (Float32, ""))
 
     for (f, fa) in vDSPFunctions
-        f! = symbol("$(f)!")
+        f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
@@ -87,7 +87,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
                 ccall(($(string("vDSP_", f,suff)),libacc),Void,
                       (Ptr{$T},Cint, Ptr{$T}, Cint, Ptr{$T}, Cint, Cint),
                       X, 1, Y, 1, out, 1, length(X))
-                return out 
+                return out
             end
         end
     end

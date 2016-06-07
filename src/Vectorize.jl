@@ -1,4 +1,4 @@
-__precompile__()
+#__precompile__()
 module Vectorize
 
 export @vectorize
@@ -8,7 +8,7 @@ export @vectorize
 @osx? (ACCELERATE = true) : (ACCELERATE = false)
 if ACCELERATE == true
     if isfile("/System/Library/Frameworks/Accelerate.framework/Accelerate")
-        @eval parse("include(\"Accelerate.jl\")")
+        eval(:(include("Accelerate.jl")))
     else
         warn("Unable to locate the Apple Accelerate framework")
     end
@@ -28,7 +28,7 @@ function __init__()
 end
 
 macro vectorize(ex)
-    esc(isa(ex, Expr) ? pushmeta!(ex, :vectorize) : ex)
+    esc(isa(ex, Expr) ? Base.pushmeta!(ex, :vectorize) : ex)
 end
 
 end # module
