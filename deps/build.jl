@@ -17,9 +17,11 @@ prints to STD_OUT by the `run` command will print automatically from the shell p
 function trycmd(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
     try
         run(cmd)
-        info(msg)
+        if msg == "" return else info(msg) end
     catch
-        error(err)
+        if err != ""
+            error(err)
+        end
     end
 end
 
@@ -36,7 +38,9 @@ function trycmd_read(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
         if msg == "" return result else info(msg) end
         return result
     catch
-        error(err)
+        if err != ""
+            error(err)
+        end
     end
 end
 
@@ -59,9 +63,14 @@ function prompt_yn(prompt::ASCIIString)
 end
 
 
+##### ARCHITECTURE ####
+if Sys.ARCH != :x86_64
+    error("Vectorize.jl currently only supports x86_64; your detected architecture is $(Sys.ARCH)")
+end
+
 #### DEPENDENCIES ####
 ## We first check whether all binary dependencies are available on the system
-deps = ["cmake"]
+deps = ["cmake", "wget"]
 for dep in deps
     err = ("$dep is not installed. Please install $dep, ensure that it is in your"*
            "PATH,  and run Pkg.build(\"Vectorize\") again.")
@@ -69,7 +78,18 @@ for dep in deps
     info("Using $dep found at $location.")
 end
 
-#### MAKE ####
+#### Yeppp ####
+if prompt_yn("Would you like to install Yeppp! into the local directory?")
+    trycmd(`mkdir downloads`)
+    trycmd(`mkdir src`)
+    trycmd(`mkdir src/yeppp`)
+    trycmd(`wget -P downloads http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2`,
+           err="Unable to download Yeppp!")
+    trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
+    info("====== Successfully installed Yeppp! ======")
+end
+
+#### VectorizePass ####
 ## We then run `make clean` before starting a fresh build of Vectorize.jl
 currdir = @__FILE__
 makedir = currdir[1:end-13]*"src/Vectorize/"
@@ -77,6 +97,7 @@ msg = "Vectorize.jl was built successfully!"
 err = "Vectorize.jl failed to build correctly; please create an issue on"*
 "GitHub and copy the output of the build process above; we will endeavour"*
 "to fix your issue as soon as possible"
-info("====== Attempting to build Vectorize.jl ======")
 trycmd(`make -C $makedir clean`)
+info("====== Successfully cleaned Vectorize.jl build directory ======")
+info("====== Attempting to build Vectorize.jl ======")
 trycmd(`make -C $makedir`, msg=msg, err=msg) ## BUILD COMMAND
