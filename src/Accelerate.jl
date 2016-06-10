@@ -10,7 +10,7 @@ const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 ##
 ## This assumes arguments of the form (output_vector, input_vector, length)
 ##
-const vecLibFunctions =
+const veclibfunctions =
     ((:ceil, :ceil),
      (:floor, :floor),
      (:sqrt, :sqrt),
@@ -46,7 +46,7 @@ const vecLibFunctions =
 ## For vecLibFunctions
 for (T, suff) in ((Float64, ""), (Float32, "f"))
 
-    for (f, fa) in vecLibFunctions
+    for (f, fa) in veclibfunctions
         f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T})
@@ -72,11 +72,11 @@ end
 ## This assumes arguments of the form (input_vec_a, stride_a, input_vec_b, stride_b,
 ##                                                   output_vec, stride_out, length)
 ##
-const vDSPFunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmul))
+const vDSPfunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmul))
 
 for (T, suff) in ((Float64, "D"), (Float32, ""))
 
-    for (f, fa) in vDSPFunctions
+    for (f, fa) in vDSPfunctions
         f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
