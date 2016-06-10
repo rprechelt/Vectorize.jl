@@ -3,7 +3,7 @@ module Yeppp
 
 ## Find Yeppp library
 currdir = @__FILE__
-bindir = currdir[1:end-4]*"deps/src/yeppp/binaries/"
+bindir = currdir[1:end-12]*"deps/src/yeppp/binaries/"
 if OS_NAME == :Darwin
     @eval const libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
 elseif OS_NAME == :Linux
@@ -25,13 +25,15 @@ const identifier = Dict(Int8 => "V8s", Int16 => "V16s", Int32 => "V32s", Int64 =
 
 for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"))
     for (argtype1, argtype2, returntype) in yepppcore
+        yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2]
+                           ,  "_", identifier[returntype])
+        println(yepppname)
         @eval begin
             function ($f)(X::Vector{$argtype1}, Y::Vector{$argtype2})
                 len = length(X)
                 out = Array($returntype, len)
-                yepppname = string("yepCore_$($(fname))_", identifier[$argtype1], identifier[$argtype2]
-                                   ,  "_", identifier[$returntype])
-                ccall((yepppname, libyeppp), Ptr{$returntype},
+
+                ccall(($(yepppname, libyeppp)), Ptr{$returntype},
                           (Ptr{$argtype1}, Ptr{$argtype2}, Ptr{$returntype},  Cint),
                           X, Y, out, len)
                 return out
