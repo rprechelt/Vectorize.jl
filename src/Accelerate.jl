@@ -72,6 +72,7 @@ end
 ## This assumes arguments of the form (input_vec_a, stride_a, input_vec_b, stride_b,
 ##                                                   output_vec, stride_out, length)
 ##
+## TODO: THESE FUNCTIONS SEG FAULT OR SIGNAL "invalid hardware instruction". 
 const vDSPfunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmul))
 
 for (T, suff) in ((Float64, "D"), (Float32, ""))
@@ -84,9 +85,9 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
                 return ($f!)(out, X, Y)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
-                ccall(($(string("vDSP_", f,suff)),libacc),Void,
+                ccall(($(string("vDSP_", fa,suff)),libacc),Void,
                       (Ptr{$T},Cint, Ptr{$T}, Cint, Ptr{$T}, Cint, Cint),
-                      X, 1, Y, 1, out, 1, length(X))
+                      X, 1, Y, 1, out, 1, length(out))
                 return out
             end
         end
