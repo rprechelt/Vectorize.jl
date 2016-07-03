@@ -29,17 +29,33 @@ const identifier = Dict(Int8 => "V8s", Int16 => "V16s", Int32 => "V32s", Int64 =
 for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:max, "Max"),
                    (:min, "Min"))
     for (argtype1, argtype2, returntype) in yepppcore
-        yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2]
-                           ,  "_", identifier[returntype])
+        yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2],
+                           "_", identifier[returntype])
         @eval begin
             function ($f)(X::Vector{$argtype1}, Y::Vector{$argtype2})
                 len = length(X)
                 out = Array($returntype, len)
-                ccall(($(yepppname, libyeppp)), Ptr{$returntype},
+                ccall(($(yepppname, libyeppp)), Cint,
                           (Ptr{$argtype1}, Ptr{$argtype2}, Ptr{$returntype},  Clonglong),
                           X, Y, out, len)
                 return out
             end
+        end
+    end
+end
+
+
+#### YepppMath ####
+for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"), (:exp, "Exp")]
+    yepppname = string("yepMath_$(fname)_V64f_V64f")
+    @eval begin
+        function ($f)(X::Vector{Float64})
+            len = length(X)
+            out = Array(Float64, len)
+            ccall(($(yepppname, libyeppp)), Cint,
+                  (Ptr{Float64}, Ptr{Float64},  Clonglong),
+                  X, out, len)
+            return out
         end
     end
 end

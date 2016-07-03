@@ -76,3 +76,22 @@ end
 #         end
 #     end
 # end
+
+# YepppMath Floating Point
+for T in [Float64]
+    @testset "Yeppp: Floating Point Math::$T" begin
+        X = convert(Vector{T}, randn(N))
+        @testset "Testing $f::$T" for f in [:sin, :cos, :tan]
+            @eval fb = $f
+            @eval fy = Vectorize.Yeppp.$f
+            @test fb(X) ≈ fy(X)
+        end
+
+        @testset "Testing $f::$T" for f in [:log, :exp]
+            @eval fb = $f
+            @eval fy = Vectorize.Yeppp.$f
+            @test fb(abs(X)) ≈ fy(abs(X))
+            
+        end
+    end
+end

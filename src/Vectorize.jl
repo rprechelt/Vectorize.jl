@@ -52,4 +52,10 @@ macro vectorize(ex)
     esc(isa(ex, Expr) ? Base.pushmeta!(ex, :vectorize) : ex)
 end
 
+const yepppfunctions = Dict(:add => (Float32, Float64), :sub => (Float32, Float64),
+                            :mul => (Float32, Float64), :max => (Float32, Float64),
+                            :min => (Float32, Float64))
+
+
+
 end # module
