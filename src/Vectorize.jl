@@ -16,6 +16,19 @@ end
 ## END OSX
 
 
+## Find Yeppp library
+currdir = @__FILE__
+bindir = currdir[1:end-16]*"deps/src/yeppp/binaries/"
+if OS_NAME == :Darwin
+    @eval const libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
+elseif OS_NAME == :Linux
+    @eval const libyeppp = bindir*"linux/x86_64/libyeppp.so"
+elseif OS_NAME == :Windows
+    @eval const libyeppp = bindir*"windows/amd64/yeppp.dll"
+end
+
+include("Yeppp.jl") # include Yeppp
+
 """
 `__init__()` -> Void
 
@@ -24,7 +37,11 @@ This allows us to precompile the rest of the module without asking the user
 to explictly initialize Yeppp! on load.
 """
 function __init__()
-    ## TODO: Init Yeppp
+    const status = ccall(("yepLibrary_Init", libyeppp), Cint,
+                         (), )
+    status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
+
+    return true
 end
 
 macro vectorize(ex)
