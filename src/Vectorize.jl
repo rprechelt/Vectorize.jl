@@ -1,5 +1,9 @@
-#__precompile__()
+__precompile__()
 module Vectorize
+
+# eval(x) = Core.eval(Vectorize, x)
+# eval(m,x) = Core.eval(m, x)
+# @osx? a : b = Core.@osx? a : b
 
 export @vectorize
 

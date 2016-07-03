@@ -11,7 +11,7 @@ srand(7)
 
 ## YepCore Signed Integer Tests
 for T in (Int8, Int16, Int32, Int64)
-    @testset "Yeppp: YepppCore::$T" begin
+    @testset "Yeppp: Integer Operations::$T" begin
         X = round(T, randn(N))
         Y = round(T, randn(N))
         @testset "Testing $fy::$T" for (f, fy) in [(.+, :add), (.-, :sub), (.*, :mul)]
@@ -24,10 +24,36 @@ end
 
 ## YepCore Floating Point Tests
 for T in (Float32, Float64)
-    @testset "Yeppp: YepppCore::$T" begin
+    @testset "Yeppp: Floating Point Operations::$T" begin
         X = randn(N)
         Y = randn(N)
         @testset "Testing $fy::$T" for (f, fy) in [(.+, :add), (.-, :sub), (.*, :mul)]
+            @eval fb = $f
+            @eval fyp = Vectorize.Yeppp.$fy
+            @test fb(X, Y) ≈ fyp(X, Y)
+        end
+    end
+end
+
+# YeppCore Max/Min Integer
+for T in (Int8, Int16, Int32)
+    @testset "Yeppp: Integer Max/Min::$T" begin
+        X = round(T, randn(N))
+        Y = round(T, randn(N))
+        @testset "Testing $fy::$T" for (f, fy) in [(max, :max), (min, :min)]
+            @eval fb = $f
+            @eval fyp = Vectorize.Yeppp.$fy
+            @test fb(X, Y) ≈ fyp(X, Y)
+        end
+    end
+end
+
+# YeppCore Max/Min Floating Point
+for T in (Float32, Float64)
+    @testset "Yeppp: Floating Point Max/Min::$T" begin
+        X = randn(N)
+        Y = randn(N)
+        @testset "Testing $fy::$T" for (f, fy) in [(max, :max), (min, :min)]
             @eval fb = $f
             @eval fyp = Vectorize.Yeppp.$fy
             @test fb(X, Y) ≈ fyp(X, Y)

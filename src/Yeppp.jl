@@ -26,7 +26,8 @@ const identifier = Dict(Int8 => "V8s", Int16 => "V16s", Int32 => "V32s", Int64 =
                         Float32 => "V32f", Float64 => "V64f")
 
 #### YepppCore ####
-for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"))
+for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:max, "Max"),
+                   (:min, "Min"))
     for (argtype1, argtype2, returntype) in yepppcore
         yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2]
                            ,  "_", identifier[returntype])
@@ -42,6 +43,9 @@ for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"))
         end
     end
 end
+
+
+
 
 
 end # End Module
