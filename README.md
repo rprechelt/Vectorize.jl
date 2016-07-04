@@ -3,7 +3,7 @@
 [![Documentation Status](https://readthedocs.org/projects/vectorizejl/badge/?version=latest)](http://vectorizejl.readthedocs.io/en/latest/?badge=latest)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 [![Build Status](https://travis-ci.org/rprechelt/Vectorize.jl.svg?branch=master)](https://travis-ci.org/rprechelt/Vectorize.jl)
-[![Coverage Status](https://coveralls.io/repos/github/rprechelt/Vectorize.jl/badge.svg?branch=master)](https://coveralls.io/github/rprechelt/Vectorize.jl?branch=master
+[![Coverage Status](https://coveralls.io/repos/github/rprechelt/Vectorize.jl/badge.svg?branch=master)](https://coveralls.io/github/rprechelt/Vectorize.jl?branch=master)
 
 This package is under **heavy** development but it is **not** currently operational; do **not** attempt to **install** this package. It will only give you *nightmares*... This notice **will** be removed as soon as Vectorize.jl can reliably be installed, and the code base has become somewhat stable.
 
