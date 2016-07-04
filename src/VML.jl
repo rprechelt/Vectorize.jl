@@ -50,6 +50,7 @@ elseif AVX512
     const global libvml = Libdl.find_library(["libmkl_vml_avx512"], ["/opt/intel/mkl/lib"])
 end
 
+#Libdl.dlopen(libvml)
 # Library dependency for VML
 const global librt = Libdl.find_library(["libmkl_rt"], ["/opt/intel/mkl/lib"])
 Libdl.dlopen(librt)
@@ -85,20 +86,64 @@ Sets accuracy, error, and FTZDAZ modes for all VML functions". This is automatic
 called in init() but can also be called to change the modes during runtime". 
 """
 function setmode(mode)
-    ccall(("_vmlSetMode", libvml),  Cuint,
-          (Cuint,),
-          mode)
+    oldmode = ccall(("_vmlSetMode", libvml),  Cuint,
+                    (Cuint,),
+                    mode)
+    return oldmode
 end
 
 """
 Returns the accuracy, error, and FTZDAZ modes for all VML functions". This is automatically
 called in init() but can also be called to change the modes during runtime". 
 """
-function setmode(mode)
-    status = ccall(("_vmlSetMode", libvml),  Cuint,
-                   (Cuint,),
-                   mode)
+function getmode()
+    status = ccall(("_vmlGetMode", libvml),  Cuint,
+                   (), )
     return status
 end
+
+
+# Basic operations on two args
+for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
+    for (f, fvml) in [(:add, :Add), (:mul, :Mul), (:sub, :Sub), (:div, :Div)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T}, Y::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X, Y)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+                ccall($(string("_v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
+                      length(out), X, Y,  out)
+                return out
+            end
+        end
+    end
+end
+
+# Basic operations on one arg
+for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
+    for (f, fvml) in [(:sqrt, :Sqrt), (:invsqrt, :InvSqrt), (:exp, :Exp),  (:acos, :Acos), (:asin, :Asin),
+                      (:acosh, :Acosh), (:asinh, :Asinh), (:log,  :Ln), (:pow, :Pow), (:abs, :Abs),
+                      (:sqr,  :Sqr), (:ceil, :Ceil), (:floor, :Floor), (:round, :Round),
+                      (:trunc, :Trunc),  (:atan, :Atan), (:cos, :Cos), (:sin, :Sin), (:tan, :Tan),
+                      (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T})
+                ccall($(string("_v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T}),
+                      length(out), X, out)
+                return out
+            end
+        end
+    end
+end
+
 
 end # End Module

@@ -7,9 +7,9 @@ else
 end
 
 ## Test Apple Accelerate
-println("===== Testing Accelerate =====")
+@osx? println("===== Testing Accelerate =====")
 @osx? include("AccelerateTests.jl") : println("Accelerate not present on current system. Aborting Accelerate tests")
-println("===== Accelerate Tests Successful =====\n\n")
+@osx? println("===== Accelerate Tests Successful =====\n\n")
 
 ## Check for presence of Yeppp!
 println("===== Testing Yeppp!  =====")
