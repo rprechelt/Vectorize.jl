@@ -95,3 +95,20 @@ for T in [Float64]
         end
     end
 end
+
+# YepppMath Floating Point - return scalar
+for T in (Float32, Float64)
+    @testset "Yeppp: Floating Point Reductions::$T" begin
+        X = convert(Vector{T}, randn(N))
+        @testset "Testing $f::$T" for f in [:sum]#, :sumabs]
+            @eval fb = $f
+            @eval fy = Vectorize.Yeppp.$f
+            @test fb(X) ≈ fy(X)
+        end
+
+        @testset "Testing $f::$T" for f in [:sumsqr]
+            @eval fy = Vectorize.Yeppp.$f
+            @test sum(X .* X) ≈ fy(X)
+        end
+    end
+end

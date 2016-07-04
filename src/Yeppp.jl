@@ -60,6 +60,23 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     end
 end
 
+## YepppCore - return scalar
+for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
+    for (f, fname) in [(:sum, "Sum"), (:sumabs, "SumAbs"), (:sumsqr, "SumSquares")]
+        yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)
+        @eval begin
+            function ($f)(X::Vector{$T})
+                len = length(X)
+                out = Array($T, 1)
+                ccall(($(yepppname, libyeppp)), Cint,
+                      (Ptr{$T}, Ptr{$T},  Clonglong),
+                      X, out, len)
+                return out[1]
+            end
+        end
+    end
+end
+
 
 
 
