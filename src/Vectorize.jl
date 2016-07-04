@@ -33,17 +33,27 @@ end
 
 include("Yeppp.jl") # include Yeppp
 
+## Find VML
+const global libvml = Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"])
+if libvml != ""
+    include("VML.jl")
+end
+
 """
 `__init__()` -> Void
 
 This function initializes the Yeppp library whenever the module is imported.
 This allows us to precompile the rest of the module without asking the user
-to explictly initialize Yeppp! on load.
+to explictly initialize Yeppp! on load. It also sets the VML mode.
 """
 function __init__()
+    # Yeppp Initialization
     const status = ccall(("yepLibrary_Init", libyeppp), Cint,
                          (), )
     status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
+
+    # VML default values
+    #VML.setmode(VML.VML_HA | VML.VML_ERRMODE_DEFAULT | VML.VML_FTZDAZ_ON)
 
     return true
 end
