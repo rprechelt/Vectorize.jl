@@ -79,15 +79,15 @@ for dep in deps
 end
 
 #### Yeppp ####
-if prompt_yn("Would you like to install Yeppp! into the local directory?")
-    trycmd(`mkdir downloads`)
-    trycmd(`mkdir src`)
-    trycmd(`mkdir src/yeppp`)
-    trycmd(`wget -P downloads http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2`,
-           err="Unable to download Yeppp!")
-    trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
-    info("====== Successfully installed Yeppp! ======")
-end
+# if prompt_yn("Would you like to install Yeppp! into the local directory?")
+trycmd(`mkdir downloads`)
+trycmd(`mkdir src`)
+trycmd(`mkdir src/yeppp`)
+trycmd(`wget -P downloads http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2`,
+       err="Unable to download Yeppp!")
+trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
+info("====== Successfully installed Yeppp! ======")
+# end
 
 #### VectorizePass ####
 ## We then run `make clean` before starting a fresh build of Vectorize.jl
