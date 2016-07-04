@@ -23,7 +23,3 @@ if Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"]) != ""
     println("===== VML Tests Successful =====\n\n")
 end
 
-
-#################### VECTORIZE TESTS ####################
-
-

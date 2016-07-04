@@ -6,7 +6,7 @@ julia:
   - release
   - nightly
 notifications:
-  email: true
+  email: false
 
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
