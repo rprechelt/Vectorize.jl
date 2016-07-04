@@ -91,13 +91,13 @@ end
 
 #### VectorizePass ####
 ## We then run `make clean` before starting a fresh build of Vectorize.jl
-currdir = @__FILE__
-makedir = currdir[1:end-13]*"src/Vectorize/"
-msg = "Vectorize.jl was built successfully!"
-err = "Vectorize.jl failed to build correctly; please create an issue on"*
-"GitHub and copy the output of the build process above; we will endeavour"*
-"to fix your issue as soon as possible"
-trycmd(`make -C $makedir clean`)
-info("====== Successfully cleaned Vectorize.jl build directory ======")
-info("====== Attempting to build Vectorize.jl ======")
-trycmd(`make -C $makedir`, msg=msg, err=msg) ## BUILD COMMAND
+# currdir = @__FILE__
+# makedir = currdir[1:end-13]*"src/Vectorize/"
+# msg = "Vectorize.jl was built successfully!"
+# err = "Vectorize.jl failed to build correctly; please create an issue on"*
+# "GitHub and copy the output of the build process above; we will endeavour"*
+# "to fix your issue as soon as possible"
+# trycmd(`make -C $makedir clean`)
+# info("====== Successfully cleaned Vectorize.jl build directory ======")
+# info("====== Attempting to build Vectorize.jl ======")
+# trycmd(`make -C $makedir`, msg=msg, err=msg) ## BUILD COMMAND
