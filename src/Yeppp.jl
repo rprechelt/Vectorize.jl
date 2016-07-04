@@ -1,15 +1,37 @@
 module Yeppp
 
 ## Find Yeppp library
-currdir = @__FILE__
-bindir = currdir[1:end-12]*"deps/src/yeppp/binaries/"
-if OS_NAME == :Darwin
-    @eval const libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
-elseif OS_NAME == :Linux
-    @eval const libyeppp = bindir*"linux/x86_64/libyeppp.so"
-elseif OS_NAME == :Windows
-    @eval const libyeppp = bindir*"windows/amd64/yeppp.dll"
+libyeppp_ = Libdl.find_library(["libyeppp"])
+if libyeppp_ != ""
+    const global libyeppp = libyeppp_
+else
+    currdir = @__FILE__
+    bindir = currdir[1:end-12]*"deps/src/yeppp/binaries/"
+    if OS_NAME == :Darwin
+        @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
+    elseif OS_NAME == :Linux
+        @eval const global libyeppp = bindir*"linux/x86_64/libyeppp.so"
+    elseif OS_NAME == :Windows
+        @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
+    end
 end
+
+"""
+`__init__()` -> Void
+
+This function initializes the Yeppp library whenever the module is imported.
+This allows us to precompile the rest of the module without asking the user
+to explictly initialize Yeppp! on load. 
+"""
+function __init__()
+    # Yeppp Initialization
+    const status = ccall(("yepLibrary_Init", libyeppp), Cint,
+                         (), )
+    status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
+    
+    return true
+end
+
 
 ## This defines the argument and return types for every yepCore function; this are as follow:
 ##
