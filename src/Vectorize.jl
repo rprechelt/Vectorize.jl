@@ -54,5 +54,7 @@ const yepppfunctions = Dict(:add => (Float32, Float64), :sub => (Float32, Float6
                             :min => (Float32, Float64))
 
 
+# Include benchmark-generated functions
+include("Functions.jl")
 
 end # module
