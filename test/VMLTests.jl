@@ -25,10 +25,11 @@ for T in [Float32, Float64]
     @testset "VML: Basic Arithmetic::$T" begin
         X = convert(Vector{T}, randn(N))
         Y = convert(Vector{T}, randn(N))
-        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*)]
-            @eval fb = $fb
+        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
+                                                  (:hypot, :hypot), (:atan2, :atan2)]
+            @eval fbase = $fb
             @eval fvml = Vectorize.VML.$f
-            @test fb(X, Y) ≈ fvml(X, Y)
+            @test fbase(X, Y) ≈ fvml(X, Y)
         end
     end
 end
@@ -39,9 +40,9 @@ for T in [Complex{Float32}, Complex{Float64}]
         X = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
         Y = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
         @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*)]
-            @eval fb = $fb
+            @eval fbase = $fb
             @eval fvml = Vectorize.VML.$f
-            @test fb(X, Y) ≈ fvml(X, Y)
+            @test fbase(X, Y) ≈ fvml(X, Y)
         end
 
         @testset "Testing $f::$T" for f in [:mulbyconj]

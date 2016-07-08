@@ -122,7 +122,26 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
     end
 end
 
-# Complex returning complex - two arg
+# Real only returning real - two args
+for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
+    for (f, fvml) in [(:hypot, :Hypot), (:atan2, :Atan2)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T}, Y::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X, Y)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+                ccall($(string("v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
+                      length(out), X, Y,  out)
+                return out
+            end
+        end
+    end
+end
+
+# Complex only returning complex - two arg
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:mulbyconj, :MulByConj)]
         f! = Symbol("$(f)!")
