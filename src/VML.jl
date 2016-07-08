@@ -122,13 +122,31 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
     end
 end
 
+# Complex returning complex - two arg
+for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
+    for (f, fvml) in [(:mulbyconj, :MulByConj)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T}, Y::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X, Y)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+                ccall($(string("v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
+                      length(out), X, Y,  out)
+                return out
+            end
+        end
+    end
+end
+
 # Basic operations on one arg
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:sqrt, :Sqrt), (:invsqrt, :InvSqrt), (:exp, :Exp),  (:acos, :Acos), (:asin, :Asin),
                       (:acosh, :Acosh), (:asinh, :Asinh), (:log,  :Ln), (:pow, :Pow),
-                      (:sqr,  :Sqr), (:ceil, :Ceil), (:floor, :Floor), (:round, :Round),
-                      (:trunc, :Trunc),  (:atan, :Atan), (:cos, :Cos), (:sin, :Sin), (:tan, :Tan),
-                      (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
+                      (:sqr,  :Sqr), (:ceil, :Ceil), (:atan, :Atan), (:cos, :Cos), (:sin, :Sin),
+                      (:tan, :Tan), (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
         f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T})
@@ -145,9 +163,54 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
     end
 end
 
-# Operations on complex returning real
+# Real only basic operations on one arg: TODO hypot, atan2
+for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
+    for (f, fvml) in [(:inv, :Inv), (:invsqrt, :InvSqrt),  (:cbrt,  :Cbrt),
+                      (:invcbrt, :InvCbrt), (:pow2o3, :Pow2o3), (:pow3o2, :Pow3o2),
+                      (:sincos, :SinCos), (:erf, :Erf),
+                      (:erfc, :Erfc), (:cdfnorm, :CdfNorm),  (:erfinv, :ErfInv),
+                      (:erfcinv,  :ErfcInv),  (:cdfnorminv, :CdfNormInv), (:lgamma, :LGamma),
+                      (:gamma, :TGamma), (:floor, :Floor), (:ceil, :Ceil), (:trunc, :Trunc),
+                      (:round, :Round), (:frac,  :Frac)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T})
+                ccall($(string("v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T}),
+                      length(out), X, out)
+                return out
+            end
+        end
+    end
+end
+
+# Operations on complex returning complex - one arg
+for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
+    for (f, fvml) in [(:conj,  :Conj)]
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Vector{$T})
+                out = similar(X)
+                return $(f!)(out, X)
+            end
+            function ($f!)(out::Vector{$T}, X::Vector{$T})
+                ccall($(string("v", prefix, fvml), librt),  Void,
+                      (Cint, Ptr{$T}, Ptr{$T}),
+                      length(out), X, out)
+                return out
+            end
+        end
+    end
+end
+
+
+# Operations on complex returning real - one arg
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
-    for (f, fvml) in [(:abs, :Abs)]
+    for (f, fvml) in [(:abs, :Abs),  (:angle,  :Arg) ]
         f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T})
