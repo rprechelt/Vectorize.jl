@@ -1,11 +1,21 @@
 #__precompile__()
 module Vectorize
+# Versions of each function available
 
-# eval(x) = Core.eval(Vectorize, x)
-# eval(m,x) = Core.eval(m, x)
-# @osx? a : b = Core.@osx? a : b
+export @vectorize, functions
 
-export @vectorize
+## FUNCTION DICTIONARY
+functions = Dict()
+
+## Function for adding to function dictionary
+function addfunction(d::Dict, k, v)
+    if k in keys(d)
+        append!(d[k], [v])
+    else
+        d[k] = []
+        append!(d[k], [v])
+    end
+end
 
 ## START OSX
 ## On OS X, check if Accelerate can be found - future proofing
@@ -18,7 +28,6 @@ if ACCELERATE == true
     end
 end
 ## END OSX
-
 
 ## Find Yeppp library
 libyeppp_ = Libdl.find_library(["libyeppp"])
@@ -35,7 +44,6 @@ else
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end
-
 include("Yeppp.jl") # include Yeppp
 
 ## Find VML
@@ -44,17 +52,14 @@ if libvml != ""
     include("VML.jl")
 end
 
-
+# vectorize macro
 macro vectorize(ex)
     esc(isa(ex, Expr) ? Base.pushmeta!(ex, :vectorize) : ex)
 end
 
-const yepppfunctions = Dict(:add => (Float32, Float64), :sub => (Float32, Float64),
-                            :mul => (Float32, Float64), :max => (Float32, Float64),
-                            :min => (Float32, Float64))
+#println("functions: ", functions)
 
-
-# Include benchmark-generated functions
+# Include optimized functions
 include("Functions.jl")
 
 end # module

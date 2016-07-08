@@ -1,4 +1,5 @@
 module Yeppp
+import Vectorize: functions, addfunction
 
 ## Find Yeppp library
 libyeppp_ = Libdl.find_library(["libyeppp"])
@@ -66,14 +67,19 @@ for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:ma
     end
 end
 
-
 #### YepppMath ####
 for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"), (:exp, "Exp")]
     yepppname = string("yepMath_$(fname)_V64f_V64f")
+    f! = Symbol("$(f)!")
+    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f")
+    addfunction(functions, (f!, (Float64,)), "Vectorize.Yeppp.$(f!)")
     @eval begin
         function ($f)(X::Vector{Float64})
+            out = Array(Float64, length(X))
+            return ($f!)(out, X)
+        end
+        function ($f!)(out::Vector{Float64}, X::Vector{Float64})
             len = length(X)
-            out = Array(Float64, len)
             ccall(($(yepppname, libyeppp)), Cint,
                   (Ptr{Float64}, Ptr{Float64},  Clonglong),
                   X, out, len)
@@ -86,6 +92,7 @@ end
 for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
     for (f, fname) in [(:sum, "Sum"), (:sumabs, "SumAbs"), (:sumsqr, "SumSquares")]
         yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)
+        addfunction(functions, (f, (T,)), "Vectorize.Yeppp.$f")
         @eval begin
             function ($f)(X::Vector{$T})
                 len = length(X)
@@ -98,9 +105,5 @@ for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
         end
     end
 end
-
-
-
-
 
 end # End Module

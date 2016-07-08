@@ -9,8 +9,10 @@ else
 end
 
 ## Initialize testing globals
-srand(13)
+println("===== Testing Accelerate =====")
 N = 1000
+srand(13)
+
 
 
 ## LOGARITHM
@@ -101,3 +103,6 @@ for T in (Float32, Float64)
         end
     end
 end
+
+
+println("===== Accelerate Tests Successful =====\n\n")

@@ -7,19 +7,13 @@ else
 end
 
 ## Test Apple Accelerate
-@osx? println("===== Testing Accelerate =====")
-@osx? include("AccelerateTests.jl") : println("Accelerate not present on current system. Aborting Accelerate tests")
-@osx? println("===== Accelerate Tests Successful =====\n\n")
+@osx? include("AccelerateTests.jl") : println("Accelerate not present. Aborting Accelerate tests")
 
-## Check for presence of Yeppp!
-println("===== Testing Yeppp!  =====")
+## Test Yeppp
 include("YepppTests.jl")
-println("===== Yeppp! Tests Successful =====\n\n")
 
-## Check for presence of VML
+## Check for presence of VML and test VML
 if Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"]) != ""
-    println("===== Testing Intel's VML =====")
     include("VMLTests.jl")
-    println("===== VML Tests Successful =====\n\n")
 end
 

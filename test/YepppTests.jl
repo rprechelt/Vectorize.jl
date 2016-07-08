@@ -6,6 +6,9 @@ else
     const Test = BaseTestNext
 end
 
+println("===== Testing Yeppp!  =====")
+
+## length of test array
 N = 1000
 srand(7)
 
@@ -112,3 +115,6 @@ for T in (Float32, Float64)
         end
     end
 end
+
+
+println("===== Yeppp! Tests Successful =====\n\n")

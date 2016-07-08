@@ -8,8 +8,9 @@ else
     const Test = BaseTestNext
 end
 
+println("===== Testing Intel's VML =====")
 # Length of test array
-N = 3
+N = 1000
 srand(13)
 
 # Test basic utility functionality
@@ -113,3 +114,5 @@ for T in [Complex{Float32}, Complex{Float64}]
         end
     end
 end
+
+println("===== VML Tests Successful =====\n\n")

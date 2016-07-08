@@ -1,4 +1,5 @@
 module VML
+import Vectorize: functions, addfunction
 
 ## Detect architecture - currently only OS X
 AVX1 = false
@@ -107,6 +108,8 @@ end
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:add, :Add), (:mul, :Mul), (:sub, :Sub), (:div, :Div)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
@@ -126,6 +129,8 @@ end
 for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
     for (f, fvml) in [(:hypot, :Hypot), (:atan2, :Atan2)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
@@ -145,6 +150,8 @@ end
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:mulbyconj, :MulByConj)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
@@ -167,6 +174,8 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
                       (:sqr,  :Sqr), (:ceil, :Ceil), (:atan, :Atan), (:cos, :Cos), (:sin, :Sin),
                       (:tan, :Tan), (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = similar(X)
@@ -182,7 +191,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
     end
 end
 
-# Real only basic operations on one arg: TODO hypot, atan2
+# Real only basic operations on one arg:
 for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
     for (f, fvml) in [(:inv, :Inv), (:invsqrt, :InvSqrt),  (:cbrt,  :Cbrt),
                       (:invcbrt, :InvCbrt), (:pow2o3, :Pow2o3), (:pow3o2, :Pow3o2),
@@ -192,6 +201,8 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
                       (:gamma, :TGamma), (:floor, :Floor), (:ceil, :Ceil), (:trunc, :Trunc),
                       (:round, :Round), (:frac,  :Frac)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = similar(X)
@@ -211,6 +222,8 @@ end
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:conj,  :Conj)]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = similar(X)
@@ -231,6 +244,8 @@ end
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:abs, :Abs),  (:angle,  :Arg) ]
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (T,)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = Array(real($T), length(X))
