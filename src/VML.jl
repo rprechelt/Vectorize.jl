@@ -113,7 +113,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
                 return $(f!)(out, X, Y)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
-                ccall($(string("_v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
                 return out
@@ -136,7 +136,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
                 return $(f!)(out, X)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T})
-                ccall($(string("_v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
                 return out
