@@ -5,42 +5,38 @@
 [![Build Status](https://travis-ci.org/rprechelt/Vectorize.jl.svg?branch=master)](https://travis-ci.org/rprechelt/Vectorize.jl)
 [![Coverage Status](https://coveralls.io/repos/github/rprechelt/Vectorize.jl/badge.svg?branch=master)](https://coveralls.io/github/rprechelt/Vectorize.jl?branch=master)
 
-This package is under **heavy** development but it is **not** currently operational; do **not** attempt to **install** this package. It will only give you *nightmares*... This notice **will** be removed as soon as Vectorize.jl can reliably be installed, and the code base has become somewhat stable.
-
 ## Features
-Currently, Vectorize.jl only provides direct access to array-oriented functions in Apple's Accelerate, Intel's VML, and Yeppp! These can be accessed using `Vectorize.LibraryName.Function()` i.e. 
+Vectorize.jl provides a unified interface to the high-performance vectorized functions provided by Apple's Accelerate framework (OS X only), Intel's VML (part of MKL) and Yeppp! These can be accessed using `Vectorize.LibraryName.Function()` i.e. 
 
-    Vectorize.Accelerate.log(X)
-    Vectorize.VML.log(X)
-    Vectorize.Yeppp!.log(x)
+    Vectorize.Accelerate.exp(X)
+    Vectorize.VML.erf(X)
+    Vectorize.Yeppp.log(x)
 
-These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 100-fold improvements are common for functions throughout the three libraries. Any attempt to call a function that is not supported by that particular library will result in an error; this is to allow the programmer specific knowledge of which functions are being vectorized, and which are not. 
+These functions can provide orders of magnitude higher-performance than the standard functions in Julia; nearly 100-fold improvements are common for functions throughout the three libraries.
 
-## Installation
-#### Julia
-Vectorize.jl can only be installed against versions of Julia that have been built from source (binary downloads will not work). This is because Vectorize.jl links and registers itself against the version of LLVM included in the Julia repository. By default, it expects the Julia repo to be in `~/.julia/`. If the source of your Julia install is in a different location, you can specify this using the `VEC_JULIA_DIR` environment variable (i.e. Vectorize will search for the Julia repo in `~/VEC_JULIA_DIR/`. 
+Furthermore, a complete benchmarking suite is run during package installation that automatically selects the fastest implementation *for your architecture* on a function-by-function basis; this means that calls to
 
-If you are installing Julia from scratch, you can install it in the correct location by running:
+    Vectorize.sin(X)
 
-    git clone https://github.com/JuliaLang/julia .julia
-    
+will be transparently mapped to the Accelerate, VML or Yeppp! implementation based upon the performance of these frameworks on *your particular machine* and the type of X. This mapping happens during package installation and precompilation and so occurs no runtime overhead (expect to wait a few extra minutes than normal to install this package as the benchmarking suite needs to be run).
 
-#### Dependencies
-Vectorize.jl has the following dependencies:
+Vectorize.jl will transparently select from the different frameworks that are available on your machine; you are not required to have any particular framework installed (although having all three tends to provide the best performance as different frameworks have different strengths).
 
-    CMake (>= 3.4)
+This package currently supports over 30 functions over Float32, Float64, Complex{Float32}, and Complex{Float64}; Vectorize.Yeppp also provides access to various Yeppp functions over UInt8, UInt16, UInt32, UInt64, Int8, Int16, Int32, and Int64 (although these are not benchmarked as neither Accelerate or VML provide equivalent functions). Every function by VML is currently supported, alongside the vast majority of optimized Yeppp functions and an equivalent portion of Accelerate. Please see the documentation for a complete list of provided functions and implementations. 
 
-Please ensure that all the dependencies are installed and are in your  `PATH`.
+*Please note, this package is still in **beta** and has not been tested on all architectures and operating systems. Currently OS X on `x86_64` is the only officially supported operating system and architecture (although it should work on Linux as-is), but full Linux and Windows support will be added in the next few weeks. Furthermore, we currently only support the `AVX1.0`, `AVX2.0` and `AVX512` instruction sets of VML - these are detected automatically during install and the most recent instruction set will be chosen.*
 
-#### Installation 
+## Installation 
 To install the latest version of Vectorize from `master`, run
 
     Pkg.clone("http://github.com/rprechelt/Vectorize.jl")
 
-from a Julia REPL.
+from a Julia REPL. 
 
 Once the package has finished cloning, run
 
     Pkg.build("Vectorize")
 
-This will print the build status to the terminal; you will be notified if the build completes successfully. If the build fails, please create an issue on Github and copy the output of `Pkg.build()` into the issue. This will help in debugging the build failures. 
+This will print the build status to the terminal; you will be notified if the build completes successfully. This will attempt to determine which frameworks are available on your machine and incorporate those frameworks into the benchmarking process; if it is unable to locate Yeppp!, it will download a local copy and store it in the Vectorize.jl package directory (no changes are made to your system by installing Vectorize.jl). The build process will report what frameworks it is able to find - if it unable to find your system-installed version of Yeppp! or MKL, please ensure that they are both in your system PATH. 
+
+If the build fails, or it is unable to find system-installed packages correctly, please create an issue on Github and copy the output of `Pkg.build()` into the issue. This will help in debugging the build failures. 
