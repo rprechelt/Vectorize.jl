@@ -70,20 +70,20 @@ end
 
 #### DEPENDENCIES ####
 ## We first check whether all binary dependencies are available on the system
-deps = ["cmake", "wget"]
-for dep in deps
-    err = ("$dep is not installed. Please install $dep, ensure that it is in your"*
-           "PATH,  and run Pkg.build(\"Vectorize\") again.")
-    location = trycmd_read(`command -v $dep`, err=err)[1:end-1]
-    info("Using $dep found at $location.")
-end
+# deps = ["cmake", "wget"]
+# for dep in deps
+#     err = ("$dep is not installed. Please install $dep, ensure that it is in your"*
+#            "PATH,  and run Pkg.build(\"Vectorize\") again.")
+#     location = trycmd_read(`command -v $dep`, err=err)[1:end-1]
+#     info("Using $dep found at $location.")
+# end
 
 #### Yeppp ####
 # if prompt_yn("Would you like to install Yeppp! into the local directory?")
 trycmd(`mkdir downloads`)
 trycmd(`mkdir src`)
 trycmd(`mkdir src/yeppp`)
-trycmd(`wget -P downloads http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2`,
+trycmd(`cuwl -L http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2 > downloads/yeppp-1.0.0.tar.bz2`,
        err="Unable to download Yeppp!")
 trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
 info("====== Successfully installed Yeppp! ======")
