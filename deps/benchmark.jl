@@ -1,12 +1,3 @@
-module Benchmark
-
-# erase old function definitions to prevent issues
-run(`rm ../src/Functions.jl`)
-run(`touch ../src/Functions.jl`)
-
-#import Vectorize: functions
-using Vectorize
-
 function benchmarkSingleArgFunction(fname, fnames,
                                     T::DataType, file::IOStream, N::Integer)
     val = Dict()
@@ -16,8 +7,11 @@ function benchmarkSingleArgFunction(fname, fnames,
         f = eval(parse(fstr))
         X = convert(Vector{T}, randn(N)) # function arguments
         f(X) # force compilation
-        time = @elapsed f(X)
-        val[fstr] = time
+        time = 0
+        for i in 1:10
+            time += @elapsed f(X)
+        end
+        val[fstr] = time/10.0
     end
 
     # default to first function
@@ -60,18 +54,4 @@ function benchmarkTwoArgFunction(fname::Symbol, fnames::Vector{Function},
         end
     end
     write(file, "\nVectorize.$(fname)(X::Vector{$T}, Y::Vector{$T}) = $(fbest)(X, Y)\n")
-end
-
-## RUN TIME
-N = 100
-file = open("../src/Functions.jl", "a")
-for ((f, T), options) in functions
-    if length(T) == 1
-        benchmarkSingleArgFunction(f, options, T[1], file, 1_000)
-#        println("f: $f, options: $(options), t: $(T[1])")
-#        break
-    end
-end
-close(file)
-
 end

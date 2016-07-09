@@ -1,5 +1,6 @@
 #__precompile__()
 module Accelerate
+import Vectorize: functions, addfunction
 
 const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 
@@ -18,7 +19,7 @@ const veclibfunctions =
      (:rec, :rec),
      (:exp, :exp),
      (:exp2, :exp2),
-     (:expm1, :exm1),
+     (:expm1, :expm1),
      (:log, :log),
      (:log1p, :log1p),
      (:log2, :log2),
@@ -48,13 +49,15 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
 
     for (f, fa) in veclibfunctions
         f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (T,T)), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = similar(X)
                 return ($f!)(out, X)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T})
-                ccall(($(string("vv", f,suff)),libacc),Void,
+                ccall(($(string("vv", fa,suff)),libacc),Void,
                       (Ptr{$T},Ptr{$T},Ptr{Cint}),
                       out,X,&length(X))
                 return out

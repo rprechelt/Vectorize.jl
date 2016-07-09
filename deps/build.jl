@@ -4,6 +4,14 @@
 ##                                                                     ##
 ############################### #########################################
 
+# erase old function definitions to prevent issues
+run(`rm ../src/Functions.jl`)
+run(`touch ../src/Functions.jl`)
+
+# 
+include("benchmark.jl")
+import Vectorize: functions
+
 """
 `trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
 This function attemps to run the shell command specified by `cmd` using `run`.
@@ -80,14 +88,29 @@ end
 
 #### Yeppp ####
 # if prompt_yn("Would you like to install Yeppp! into the local directory?")
-trycmd(`mkdir downloads`)
-trycmd(`mkdir src`)
-trycmd(`mkdir src/yeppp`)
-trycmd(`cuwl -L http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2 > downloads/yeppp-1.0.0.tar.bz2`,
-       err="Unable to download Yeppp!")
-trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
-info("====== Successfully installed Yeppp! ======")
+if isfile("downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
+else
+    info("====== Installing Yeppp! into local directory ======")
+    trycmd(`mkdir downloads`)
+    trycmd(`mkdir src`)
+    trycmd(`mkdir src/yeppp`)
+    trycmd(`cuwl -L http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2 > downloads/yeppp-1.0.0.tar.bz2`,
+           err="Unable to download Yeppp!")
+    trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
+    info("====== Successfully installed Yeppp! ======")
+end
 # end
+
+# BENCHMARK
+## RUN TIME
+N = 1_000
+file = open("../src/Functions.jl", "a")
+for ((f, T), options) in functions
+    if length(T) == 1
+        benchmarkSingleArgFunction(f, options, T[1], file, 1_000)
+    end
+end
+close(file)
 
 #### VectorizePass ####
 ## We then run `make clean` before starting a fresh build of Vectorize.jl
