@@ -72,7 +72,7 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     yepppname = string("yepMath_$(fname)_V64f_V64f")
     f! = Symbol("$(f)!")
     addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f")
-    addfunction(functions, (f!, (Float64,)), "Vectorize.Yeppp.$(f!)")
+    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)")
     @eval begin
         function ($f)(X::Vector{Float64})
             out = Array(Float64, length(X))
@@ -90,7 +90,7 @@ end
 
 ## YepppCore - return scalar
 for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
-    for (f, fname) in [(:sum, "Sum"), (:sumabs, "SumAbs"), (:sumsqr, "SumSquares")]
+    for (f, fname) in [(:sum, "Sum"), (:sumsqr, "SumSquares")]
         yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)
         addfunction(functions, (f, (T,)), "Vectorize.Yeppp.$f")
         @eval begin

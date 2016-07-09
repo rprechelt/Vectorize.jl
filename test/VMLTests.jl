@@ -10,7 +10,7 @@ end
 
 println("===== Testing Intel's VML =====")
 # Length of test array
-N = 1000
+N = 5
 srand(13)
 
 # Test basic utility functionality
@@ -24,10 +24,10 @@ end
 # Real Arithmetic
 for T in [Float32, Float64]
     @testset "VML: Basic Arithmetic::$T" begin
-        X = convert(Vector{T}, randn(N))
-        Y = convert(Vector{T}, randn(N))
+        X = convert(Vector{T}, abs(randn(N)))
+        Y = convert(Vector{T}, abs(randn(N)))
         @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
-                                                  (:hypot, :hypot), (:atan2, :atan2)]
+                                                  (:hypot, :hypot), (:atan2, :atan2), (:pow, .^)]
             @eval fbase = $fb
             @eval fvml = Vectorize.VML.$f
             @test fbase(X, Y) ≈ fvml(X, Y)
@@ -40,7 +40,8 @@ for T in [Complex{Float32}, Complex{Float64}]
     @testset "VML: Complex Arithmetic::$T" begin
         X = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
         Y = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
-        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*)]
+        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
+                                                  (:pow, .^)]
             @eval fbase = $fb
             @eval fvml = Vectorize.VML.$f
             @test fbase(X, Y) ≈ fvml(X, Y)
@@ -68,7 +69,7 @@ for T in [Float32, Float64]
             @test fb(X) ≈ fvml(X)
         end
 
-        @testset "Testing $f::$T" for f in [:sqrt, :log10, :acosh, :asinh, :log, :erfcinv]
+        @testset "Testing $f::$T" for f in [:sqrt, :log10, :acosh, :asinh, :log]
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
             @test fb(Y) ≈ fvml(Y)

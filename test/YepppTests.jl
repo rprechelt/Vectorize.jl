@@ -103,7 +103,7 @@ end
 for T in (Float32, Float64)
     @testset "Yeppp: Floating Point Reductions::$T" begin
         X = convert(Vector{T}, randn(N))
-        @testset "Testing $f::$T" for f in [:sum]#, :sumabs]
+        @testset "Testing $f::$T" for f in [:sum]
             @eval fb = $f
             @eval fy = Vectorize.Yeppp.$f
             @test fb(X) ≈ fy(X)

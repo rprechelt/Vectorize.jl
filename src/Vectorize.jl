@@ -1,6 +1,5 @@
 #__precompile__()
 module Vectorize
-# Versions of each function available
 
 export @vectorize, functions
 
@@ -56,8 +55,6 @@ end
 macro vectorize(ex)
     esc(isa(ex, Expr) ? Base.pushmeta!(ex, :vectorize) : ex)
 end
-
-#println("functions: ", functions)
 
 # Include optimized functions
 include("Functions.jl")

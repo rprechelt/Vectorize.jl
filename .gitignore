@@ -3,3 +3,4 @@
 *.jl.mem
 deps/src/*
 deps/downloads/*
+src/Functions.jl

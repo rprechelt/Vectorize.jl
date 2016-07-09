@@ -1,80 +1,77 @@
-function benchmarkSingleArgFunction(fname::Symbol, fnames::Vector{Function},
-                                    types::Vector{DataType}, filename, N::Integer)
+module Benchmark
 
-    # open file for appending
-    file = open(filename, "a")
-    
-    # For every argument type
-    for T in types
-        val = Dict()
+# erase old function definitions to prevent issues
+run(`rm ../src/Functions.jl`)
+run(`touch ../src/Functions.jl`)
 
-        # Iterate over all functions
-        for f in fnames
-            X = convert(Vector{T}, randn(N)) # function arguments
-            f(X) # force compilation
-            time = @elapsed f(X)
-            val[f] = time
-        end
+#import Vectorize: functions
+using Vectorize
 
-        # default to first function
-        t = val[fnames[1]]
-        fbest = fnames[1]
-
-        # find fastest function
-        for f in fnames
-            if val[f] < t
-                t = val[f]
-                fbest = f
-
-            end
-        end
-
-        write(file, "\n$(fname)(X::Vector{$T}) = $(fbest)(X)\n")
+function benchmarkSingleArgFunction(fname, fnames,
+                                    T::DataType, file::IOStream, N::Integer)
+    val = Dict()
+    println("TESTING: $(fname)(Vector{$T})")
+    # Iterate over all functions
+    for fstr in fnames
+        f = eval(parse(fstr))
+        X = convert(Vector{T}, randn(N)) # function arguments
+        f(X) # force compilation
+        time = @elapsed f(X)
+        val[fstr] = time
     end
 
-    close(file)
-    
+    # default to first function
+    t = val[fnames[1]]
+    fbest = fnames[1]
+
+    # find fastest function
+    for f in fnames
+        if val[f] < t
+            t = val[f]
+            fbest = f
+        end
+    end
+    write(file, "$(fname)(X::Vector{$T}) = $(fbest)(X::Vector{$T})\n")
+    println("BENCHMARK: $(fname)(Vector{$T}) mapped to $(fbest)()\n")
 end
 
 
 function benchmarkTwoArgFunction(fname::Symbol, fnames::Vector{Function},
-                                 types::Vector{DataType}, filename, N::Integer)
-
-    # open file for appending
-    file = open(filename, "a")
-    
-    # For every argument type
-    for T in types
-        val = Dict()
-
-        # Iterate over all functions
-        for f in fnames
-            X = convert(Vector{T}, randn(N)) # function arguments
-            Y = convert(Vector{T}, randn(N)) # function arguments
-            f(X, Y) # force compilation
-            time = @elapsed f(X, Y)
-            val[f] = time
-        end
-
-        # default to first function
-        t = val[fnames[1]]
-        fbest = fnames[1]
-
-        # find fastest function
-        for f in fnames
-            if val[f] < t
-                t = val[f]
-                fbest = f
-
-            end
-        end
-
-        write(file, "\n$(fname)(X::Vector{$T}, Y::Vector{$T}) = $(fbest)(X, Y)\n")
+                                 T::DataType, file::IOStream, N::Integer)
+    val = Dict()
+    # Iterate over all functions
+    for f in fnames
+        X = convert(Vector{T}, randn(N)) # function arguments
+        Y = convert(Vector{T}, randn(N)) # function arguments
+        f(X, Y) # force compilation
+        time = @elapsed f(X, Y)
+        val[f] = time
     end
 
-    close(file)
-    
+    # default to first function
+    t = val[fnames[1]]
+    fbest = fnames[1]
+
+    # find fastest function
+    for f in fnames
+        if val[f] < t
+            t = val[f]
+            fbest = f
+        end
+    end
+    write(file, "\nVectorize.$(fname)(X::Vector{$T}, Y::Vector{$T}) = $(fbest)(X, Y)\n")
 end
 
-benchmarkSingleArgFunction(:cos,  [cos, sin], [Float32, Float64], "test", 1000)
-benchmarkTwoArgFunction(:max,  [min, max], [Float32, Float64], "test", 1000)
+## RUN TIME
+N = 100
+file = open("../src/Functions.jl", "a")
+for ((f, T), options) in functions
+    if length(T) == 1
+        benchmarkSingleArgFunction(f, options, T[1], file, 1_000)
+#        println("f: $f, options: $(options), t: $(T[1])")
+#        break
+    end
+end
+close(file)
+
+end
