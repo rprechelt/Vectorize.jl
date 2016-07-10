@@ -8,10 +8,11 @@
 currdir = @__FILE__
 pkgdir = currdir[1:end-13]
 function_location = pkgdir*"src/Functions.jl"
-run(`rm $(function_location)`)
-run(`touch $(function_location)`)
 
-# 
+# Clean up directory and build
+include("clean.jl")
+
+# Import benchmarking functions
 include("benchmark.jl")
 
 """
@@ -90,7 +91,7 @@ end
 
 #### Yeppp ####
 # if prompt_yn("Would you like to install Yeppp! into the local directory?")
-if isfile("downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
+if isfile("$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
 else
     info("====== Installing Yeppp! into local directory ======")
     trycmd(`mkdir $(pkgdir)deps/downloads`)
@@ -103,6 +104,7 @@ end
 # end
 
 # Have to import vectorize after Yeppp is downloaded
+push!(LOAD_PATH, "$(pkgdir)src/")
 import Vectorize: functions
 
 # BENCHMARK
