@@ -245,7 +245,7 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:abs, :Abs),  (:angle,  :Arg) ]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f!, (real(T),T)), "Vectorize.VML.$(f!)")
         @eval begin
             function ($f)(X::Vector{$T})
                 out = Array(real($T), length(X))

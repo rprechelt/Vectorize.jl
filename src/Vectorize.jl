@@ -43,7 +43,9 @@ else
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end
-include("Yeppp.jl") # include Yeppp
+if isfile(libyeppp)
+    include("Yeppp.jl") # include Yeppp if present
+end
 
 ## Find VML
 const global libvml = Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"])

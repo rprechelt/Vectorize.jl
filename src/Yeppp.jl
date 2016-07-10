@@ -26,9 +26,11 @@ to explictly initialize Yeppp! on load.
 """
 function __init__()
     # Yeppp Initialization
-    const status = ccall(("yepLibrary_Init", libyeppp), Cint,
-                         (), )
-    status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
+    if isfile(libyeppp)
+        const status = ccall(("yepLibrary_Init", libyeppp), Cint,
+                             (), )
+        status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
+    end
     
     return true
 end

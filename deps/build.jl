@@ -5,12 +5,14 @@
 ############################### #########################################
 
 # erase old function definitions to prevent issues
-run(`rm ../src/Functions.jl`)
-run(`touch ../src/Functions.jl`)
+currdir = @__FILE__
+pkgdir = currdir[1:end-13]
+function_location = pkgdir*"src/Functions.jl"
+run(`rm $(function_location)`)
+run(`touch $(function_location)`)
 
 # 
 include("benchmark.jl")
-import Vectorize: functions
 
 """
 `trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
@@ -91,23 +93,28 @@ end
 if isfile("downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
 else
     info("====== Installing Yeppp! into local directory ======")
-    trycmd(`mkdir downloads`)
-    trycmd(`mkdir src`)
-    trycmd(`mkdir src/yeppp`)
-    trycmd(`cuwl -L http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2 > downloads/yeppp-1.0.0.tar.bz2`,
-           err="Unable to download Yeppp!")
-    trycmd(`tar -xjvf downloads/yeppp-1.0.0.tar.bz2 -C src/yeppp --strip-components=1`)
+    trycmd(`mkdir $(pkgdir)deps/downloads`)
+    trycmd(`mkdir $(pkgdir)deps/src`)
+    trycmd(`mkdir $(pkgdir)deps/src/yeppp`)
+    run(pipeline(`curl -L http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2`, stdout="$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2"))
+    trycmd(`tar -xjvf $(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2 -C $(pkgdir)deps/src/yeppp --strip-components=1`)
     info("====== Successfully installed Yeppp! ======")
 end
 # end
 
+# Have to import vectorize after Yeppp is downloaded
+import Vectorize: functions
+
 # BENCHMARK
-## RUN TIME
 N = 1_000
-file = open("../src/Functions.jl", "a")
+file = open("$(pkgdir)src/Functions.jl", "a")
 for ((f, T), options) in functions
     if length(T) == 1
         benchmarkSingleArgFunction(f, options, T[1], file, 1_000)
+    elseif length(T) == 2
+        benchmarkTwoArgFunction(f, options, T, file, 1_000)
+    elseif length(T) == 3
+        benchmarkThreeArgFunction(f, options, T, file, 1_000)
     end
 end
 close(file)
