@@ -14,7 +14,7 @@ with `fname`. It benchmarks every function in `fnames` against the single
 type `Vector{T}` of length `N` and writes the resulting association into the 
 IOstream `file`. 
 
-    fname: name to be associated with Vectorize.$(fname)
+    fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
     T: the type of the Vector{T} to pass to the function
     file: the IOStream to write the final string onto
@@ -63,7 +63,7 @@ with `fname`. It benchmarks every function in `fnames` against two `Vector{T}`'s
 of length `N` and writes the resulting association into the 
 IOstream `file`. 
 
-    fname: name to be associated with Vectorize.$(fname)
+    fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
     T: tuple of types of Vector{T} to pass to the function
     file: the IOStream to write the final string onto
@@ -113,7 +113,7 @@ with `fname`. It benchmarks every function in `fnames` against three `Vector{T}`
 of length `N` and writes the resulting association into the 
 IOstream `file`. 
 
-    fname: name to be associated with Vectorize.$(fname)
+    fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
     T: tuple of types of Vector{T} to pass to the function
     file: the IOStream to write the final string onto
