@@ -12,7 +12,7 @@
 This function selects a single implementation from `fnames` and associates it
 with `fname`. It benchmarks every function in `fnames` against the single
 type `Vector{T}` of length `N` and writes the resulting association into the 
-IOstream `file`. 
+IOstream `file`.  
 
     fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked

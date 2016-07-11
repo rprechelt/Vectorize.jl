@@ -17,7 +17,8 @@ AVX512 = false
 
 # Check for AVX1.0
 try
-    result = readall(pipeline(`sysctl -a`, `grep machdep.cpu.features`, `grep AVX`))
+    # use sysctl on OSX and /proc/cpuinfo on Linux
+    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.features`, `grep AVX`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX`))
     if match(r"AVX1.0", result) == Void
         error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
     else
@@ -29,9 +30,20 @@ end
 
 # Check for AVX2.0
 try
-    result = readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX2`))
+    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX2`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX2`)) 
     if match(r"AVX2", result) == Void
         error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
+    else
+        AVX2 = true
+    end
+catch
+    # Unable to find AVX2
+end
+
+# Check for AVX512
+try
+    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) 
+    if match(r"AVX512", result) == Void
     else
         AVX2 = true
     end
@@ -47,8 +59,11 @@ try
     else
         AVX512 = true
     end
-catch
-    #Unable to find AVX512
+catch     #Unable to find AVX512
+    if AVX1 == false && AVX2 == false && AVX512 == false
+        error("Current platform does not support AVX, AVX2 or AVX512")
+    end
+
 end
 
 # Use the newest version of VML available
