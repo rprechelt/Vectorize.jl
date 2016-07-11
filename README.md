@@ -3,7 +3,6 @@
 [![Documentation Status](https://readthedocs.org/projects/vectorizejl/badge/?version=latest)](http://vectorizejl.readthedocs.io/en/latest/?badge=latest)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
 [![Build Status](https://travis-ci.org/rprechelt/Vectorize.jl.svg?branch=master)](https://travis-ci.org/rprechelt/Vectorize.jl)
-[![Coverage Status](https://coveralls.io/repos/github/rprechelt/Vectorize.jl/badge.svg?branch=master)](https://coveralls.io/github/rprechelt/Vectorize.jl?branch=master)
 
 ## Features
 Vectorize.jl provides a unified interface to the high-performance vectorized functions provided by Apple's [Accelerate](https://developer.apple.com/reference/accelerate) framework (OS X only), Intel's [VML](https://software.intel.com/en-us/node/521751) (part of MKL) and [Yeppp!](http://www.yeppp.info/) These can be accessed using the `Vectorize.LibraryName.Function()` syntax i.e. 
