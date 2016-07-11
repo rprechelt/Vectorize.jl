@@ -1,11 +1,20 @@
+##===----------------------------------------------------------------------===##
+##                                     YEPPP.JL                               ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
+##                                                                            ##
+##  This file provides acces to Yeppp and handles checking for the existence  ##
+##  of the Yeppp library during import.                                       ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
 module Yeppp
 import Vectorize: functions, addfunction
 
-## Find Yeppp library
+# Attempt to locate Yeppp library before we proceed with compiling file
 libyeppp_ = Libdl.find_library(["libyeppp"])
-if libyeppp_ != ""
+if libyeppp_ != "" # using system installed yeppp
     const global libyeppp = libyeppp_
-else
+else # using Vectorize.jlprovided yppp
     currdir = @__FILE__
     bindir = currdir[1:end-12]*"deps/src/yeppp/binaries/"
     if OS_NAME == :Darwin
@@ -50,12 +59,14 @@ const identifier = Dict(Int8 => "V8s", Int16 => "V16s", Int32 => "V32s", Int64 =
                         UInt8 => "V8u", UInt16 => "V16u", UInt32 => "V32u", UInt64 => "V64u",
                         Float32 => "V32f", Float64 => "V64f")
 
-#### YepppCore ####
+#### Yeppp Arithmetic taking two arguments and returning vector
 for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:max, "Max"),
                    (:min, "Min"))
     for (argtype1, argtype2, returntype) in yepppcore
+        # generate Yeppp function name
         yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2],
                            "_", identifier[returntype])
+        addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f") 
         @eval begin
             function ($f)(X::Vector{$argtype1}, Y::Vector{$argtype2})
                 len = length(X)
@@ -69,18 +80,19 @@ for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:ma
     end
 end
 
-#### YepppMath ####
+#### YepppMath functions returning vectors
 for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"), (:exp, "Exp")]
     yepppname = string("yepMath_$(fname)_V64f_V64f")
     f! = Symbol("$(f)!")
-    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f")
-    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)")
+    # register functions for build
+    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f") 
+    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)") 
     @eval begin
-        function ($f)(X::Vector{Float64})
+        function ($f)(X::Vector{Float64}) # regular syntax
             out = Array(Float64, length(X))
             return ($f!)(out, X)
         end
-        function ($f!)(out::Vector{Float64}, X::Vector{Float64})
+        function ($f!)(out::Vector{Float64}, X::Vector{Float64}) # in place syntax
             len = length(X)
             ccall(($(yepppname, libyeppp)), Cint,
                   (Ptr{Float64}, Ptr{Float64},  Clonglong),
@@ -90,7 +102,7 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     end
 end
 
-## YepppCore - return scalar
+## YepppCore - functions that return scalars
 for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
     for (f, fname) in [(:sum, "Sum"), (:sumsqr, "SumSquares")]
         yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)

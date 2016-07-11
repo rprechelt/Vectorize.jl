@@ -1,3 +1,12 @@
+##===----------------------------------------------------------------------===##
+##                                      VML.JL                                ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
+##                                                                            ##
+##  This file provides acces to Yeppp and handles checking for the existence  ##
+##  of the Yeppp library during import.                                       ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
 module VML
 import Vectorize: functions, addfunction
 
