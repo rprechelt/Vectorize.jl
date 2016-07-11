@@ -3,7 +3,7 @@
 ##                                                                            ##
 ##===----------------------------------------------------------------------===##
 ##                                                                            ##
-##  This file provides acces to Yeppp and handles checking for the existence  ##
+##  This file provides access to Yeppp and handles checking for the existence ##
 ##  of the Yeppp library during import.                                       ##
 ##                                                                            ##
 ##===----------------------------------------------------------------------===##

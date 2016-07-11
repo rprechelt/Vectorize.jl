@@ -3,8 +3,9 @@
 ##                                                                            ##
 ##===----------------------------------------------------------------------===##
 ##                                                                            ##
-##  This file provides acces to Yeppp and handles checking for the existence  ##
-##  of the Yeppp library during import.                                       ##
+##  This file provides access to VML and handles checking for the existence   ##
+##  of the VML library during import and checks for the available             ##
+##  vector instruction sets.                                                  ##
 ##                                                                            ##
 ##===----------------------------------------------------------------------===##
 module VML
