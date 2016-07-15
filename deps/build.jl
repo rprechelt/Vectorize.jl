@@ -8,6 +8,12 @@
 ##                                                                            ##
 ##===----------------------------------------------------------------------===##
 
+# Cross-version compatibility
+if VERSION < v"0.5.0-dev" # Julia v0.4
+    readstring(cmd) = readall(cmd)
+end
+
+
 """
 This function selects a single implementation from `fnames` and associates it
 with `fname`. It benchmarks every function in `fnames` against the single
@@ -161,7 +167,7 @@ end
 `trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
 This function attemps to run the shell command specified by `cmd` using `run`.
 If `cmd` returns successfully, it will print `msg` using info().
-If `readall(cmd)` throws an exception (the shell command returns non-zero),
+If `run(cmd)` throws an exception (the shell command returns non-zero),
 then the function throws an error and prints the `err` argument.
 
 Note: This function does not return the value of the command to the caller. However,
@@ -182,12 +188,12 @@ end
 `trycmd_read(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
 This function attemps to run the shell command specified by `cmd` using `readall`.
 If `cmd` returns successfully, it will return its result to the caller and print `msg`.
-If `readall(cmd)` throws an exception (the shell command returns non-zero),
+If `readall(cmd)`/`readstring(cmd)` throws an exception (the shell command returns non-zero),
 then the function throws an error and prints the `err` argument.
 """
 function trycmd_read(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
     try
-        result = readall(cmd)
+        result = readstring(cmd) # Julia v0.5 and above
         if msg == "" return result else info(msg) end
         return result
     catch

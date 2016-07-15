@@ -10,18 +10,25 @@
 module Yeppp
 import Vectorize: functions, addfunction
 
+# Cross-version compatibility
+if VERSION < v"0.5.0-dev" # Julia v0.4
+    OS = OS_NAME
+else
+    OS = Sys.KERNEL
+end
+
 # Attempt to locate Yeppp library before we proceed with compiling file
 libyeppp_ = Libdl.find_library(["libyeppp"])
 if libyeppp_ != "" # using system installed yeppp
     const global libyeppp = libyeppp_
-else # using Vectorize.jlprovided yppp
+else # using Vectorize.jl provided yppp
     currdir = @__FILE__
     bindir = currdir[1:end-12]*"deps/src/yeppp/binaries/"
-    if OS_NAME == :Darwin
+    if OS == :Darwin
         @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
-    elseif OS_NAME == :Linux
+    elseif OS == :Linux
         @eval const global libyeppp = bindir*"linux/x86_64/libyeppp.so"
-    elseif OS_NAME == :Windows
+    elseif OS == :Windows
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end

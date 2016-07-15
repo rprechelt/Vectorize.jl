@@ -11,6 +11,14 @@
 module VML
 import Vectorize: functions, addfunction
 
+# Cross-version compatibility
+if VERSION < v"0.5.0-dev" # Julia v0.4
+    readstring(cmd) = readall(cmd)
+    OS = OS_NAME
+else
+    OS = Sys.KERNEL
+end
+
 ## Detect architecture - currently only OS X
 AVX1 = false
 AVX2 = false
@@ -19,7 +27,7 @@ AVX512 = false
 # Check for AVX1.0
 try
     # use sysctl on OSX and /proc/cpuinfo on Linux
-    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.features`, `grep AVX`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX`))
+    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.features`, `grep AVX`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX`))
     if match(r"AVX1.0", result) == Void
         error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
     else
@@ -31,7 +39,7 @@ end
 
 # Check for AVX2.0
 try
-    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX2`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX2`)) 
+    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX2`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX2`)) 
     if match(r"AVX2", result) == Void
         error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
     else
@@ -43,7 +51,7 @@ end
 
 # Check for AVX512
 try
-    result = @osx? readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) : readall(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) 
+    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) 
     if match(r"AVX512", result) == Void
     else
         AVX2 = true
@@ -54,7 +62,7 @@ end
 
 # Check for AVX512
 try
-    result = readall(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`))
+    result = readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`))
     if match(r"AVX512", result) == Void
         error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
     else
@@ -223,7 +231,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
                       (:erf, :Erf),  (:ceil, :Ceil), 
                       (:erfc, :Erfc), (:cdfnorm, :CdfNorm),  (:erfinv, :ErfInv),
                       (:erfcinv,  :ErfcInv),  (:cdfnorminv, :CdfNormInv), (:lgamma, :LGamma),
-                      (:gamma, :TGamma), (:floor, :Floor), (:ceil, :Ceil), (:trunc, :Trunc),
+                      (:gamma, :TGamma), (:floor, :Floor), (:trunc, :Trunc),
                       (:round, :Round), (:frac,  :Frac), (:abs, :Abs), (:sqr, :Sqr)]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
