@@ -12,6 +12,13 @@ module Vectorize
 
 export @vectorize
 
+# Cross-version compatibility
+if VERSION < v"0.5.0-dev" # Julia v0.4
+    OS = OS_NAME
+else
+    OS = Sys.KERNEL
+end
+
 ## FUNCTION DICTIONARY
 functions = Dict()
 
@@ -27,7 +34,7 @@ end
 
 ## START OSX
 ## On OS X, check if Accelerate can be found - future proofing
-@osx? (ACCELERATE = true) : (ACCELERATE = false)
+OS == :Darwin ? (ACCELERATE = true) : (ACCELERATE = false)
 if ACCELERATE == true
     if isfile("/System/Library/Frameworks/Accelerate.framework/Accelerate")
         eval(:(include("Accelerate.jl")))
@@ -44,11 +51,11 @@ if libyeppp_ != ""
 else
     currdir = @__FILE__
     bindir = currdir[1:end-16]*"deps/src/yeppp/binaries/"
-    if OS_NAME == :Darwin
+    if OS == :Darwin
         @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
-    elseif OS_NAME == :Linux
+    elseif OS == :Linux
         @eval const global libyeppp = bindir*"linux/x86_64/libyeppp.so"
-    elseif OS_NAME == :Windows
+    elseif OS == :Windows
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end
