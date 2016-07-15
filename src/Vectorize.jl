@@ -1,7 +1,16 @@
-#__precompile__()
+##===----------------------------------------------------------------------===##
+##                                   ACCELERATE.JL                            ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
+##                                                                            ##
+##  This file checks for the available frameworks and imports only the        ##
+##  frameworks available; it also coordinates access to three frameworks      ##
+##  through the unified Vectorize.f() syntax                                  ##
+##                                                                            ##
+##===----------------------------------------------------------------------===##
 module Vectorize
 
-export @vectorize, functions
+export @vectorize
 
 ## FUNCTION DICTIONARY
 functions = Dict()
@@ -55,7 +64,9 @@ end
 
 # vectorize macro
 macro vectorize(ex)
-    esc(isa(ex, Expr) ? Base.pushmeta!(ex, :vectorize) : ex)
+    f = :(Vectorize.$(ex.args[1]))
+    arg = ex.args[2]
+    return esc(:($f($arg)))
 end
 
 # Include optimized functions
