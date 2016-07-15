@@ -11,13 +11,20 @@ Vectorize.jl provides a unified interface to the high-performance vectorized fun
     Vectorize.VML.erf(X)
     Vectorize.Yeppp.log(x)
 
-These functions can provide orders of magnitude higher-performance than the standard functions in Julia; nearly 50-fold improvements are common for functions throughout the three libraries.
-
 Furthermore, a complete benchmarking suite is run during package installation that automatically selects the fastest implementation *for your architecture* on a function-by-function basis; this means that calls to
 
     Vectorize.sin(X)
 
-will be transparently mapped to the Accelerate, VML or Yeppp! implementation based upon the performance of these frameworks on *your particular machine* and the type of `X`. This mapping happens during package installation and precompilation and so occurs no runtime overhead (expect to wait a few extra seconds than normal to install this package as the benchmarking suite needs to be run).
+will be transparently mapped to the Accelerate, VML or Yeppp! implementation based upon the performance of these frameworks on *your particular machine* and the type of `X`. This mapping happens during package installation and so occurs no runtime overhead (expect to wait a few extra seconds than normal to install this package as the benchmarking suite needs to be run).
+
+Lastly, Vectorize.jl provides a `@vectorize` macro that automatically converts a call to Julia's standard implementation into the fastest vectorized equivalent available on your machine, i.e.
+
+    cos(X)    # Standard Julia implementation
+    @vectorize cos(X)    # Converted to Yeppp, VML, or Accelerate at compile time
+
+This macro provides an easy method for code to be quickly converted to use Vectorize.jl with little additional effort. 
+
+These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 10-fold improvements are common for functions throughout the three libraries. Since these functions are designed to operate on moderate-to-large sized arrays, they tend to be less performant that standard Julia functions for arrays of length less than 10 elements; in that case, it is best not to use Vectorize.jl. 
 
 Vectorize.jl will transparently select from the different frameworks that are available on your machine; you are not required to have any particular framework installed (although having all three tends to provide the best performance as different frameworks have different strengths).
 

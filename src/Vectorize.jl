@@ -64,12 +64,27 @@ end
 
 # vectorize macro
 macro vectorize(ex)
-    f = :(Vectorize.$(ex.args[1]))
-    arg = ex.args[2]
-    return esc(:($f($arg)))
+    len = length(ex.args)
+    if len == 2
+        f = :(Vectorize.$(ex.args[1]))
+        arg = ex.args[2]
+        return esc(:($f($arg)))
+    elseif len == 3
+        f = :(Vectorize.$(ex.args[1]))
+        arg1 = ex.args[2]
+        arg2 = ex.args[3]
+        return esc(:($f($arg1, $arg2)))
+    else
+        f = :(Vectorize.$(ex.args[1]))
+        arg1 = ex.args[2]
+        arg2 = ex.args[3]
+        arg3 = ex.args[4]
+        return esc(:($f($arg1, $arg2, $arg3)))
+    end
 end
 
 # Include optimized functions
 include("Functions.jl")
+
 
 end # module
