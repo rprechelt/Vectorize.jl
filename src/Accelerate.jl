@@ -19,36 +19,12 @@ const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 ## This assumes arguments of the form (output_vector, input_vector, length)
 ##
 const veclibfunctions =
-    ((:ceil, :ceil),
-     (:floor, :floor),
-     (:sqrt, :sqrt),
-     (:rsqrt, :rsqrt),
-     (:rec, :rec),
-     (:exp, :exp),
-     (:exp2, :exp2),
-     (:expm1, :expm1),
-     (:log, :log),
-     (:log1p, :log1p),
-     (:log2, :log2),
-     (:log10, :log10),
-     (:sin, :sin),
-     (:sinpi, :sinpi),
-     (:cos, :cos),
-     (:cospi, :cospi),
-     (:tan, :tan),
-     (:tanpi, :tanpi),
-     (:asin, :asin),
-     (:acos, :acos),
-     (:atan, :atan),
-     (:sinh, :sinh),
-     (:cosh, :cosh),
-     (:tanh, :tanh),
-     (:asinh, :asinh),
-     (:acosh, :acosh),
-     (:atanh, :atanh),
-     (:trunc,:int),
-     (:round,:nint),
-     (:exponent,:logb),
+    ((:ceil, :ceil), (:floor, :floor), (:sqrt, :sqrt), (:rsqrt, :rsqrt), (:rec, :rec),
+     (:exp, :exp), (:exp2, :exp2), (:expm1, :expm1), (:log, :log), (:log1p, :log1p),
+     (:log2, :log2), (:log10, :log10), (:sin, :sin), (:sinpi, :sinpi), (:cos, :cos),
+     (:cospi, :cospi), (:tan, :tan), (:tanpi, :tanpi), (:asin, :asin), (:acos, :acos),
+     (:atan, :atan), (:sinh, :sinh), (:cosh, :cosh), (:tanh, :tanh), (:asinh, :asinh),
+     (:acosh, :acosh), (:atanh, :atanh), (:trunc,:int), (:round,:nint), (:exponent,:logb),
      (:abs,:fabs))
 
 ## For vecLibFunctions
@@ -83,7 +59,8 @@ end
 ##                                                   output_vec, stride_out, length)
 ##
 ## TODO: THESE FUNCTIONS SEG FAULT OR SIGNAL "invalid hardware instruction". 
-const vDSPfunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmul))
+const vDSPfunctions = ((:add, :vadd), (:sub, :vsub),  (:div, :vdiv), (:mul, :vmul),
+                       (:max, :maxv), (:min, :minv))
 
 for (T, suff) in ((Float64, "D"), (Float32, ""))
 
@@ -91,17 +68,58 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
         f! = Symbol("$(f)!")
         @eval begin
             function ($f)(X::Vector{$T}, Y::Vector{$T})
-                out = similar(X)
+                out = Array($T, length(X))
                 return ($f!)(out, X, Y)
             end
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
-                ccall(($(string("vDSP_", fa,suff)),libacc),Void,
-                      (Ptr{$T},Cint, Ptr{$T}, Cint, Ptr{$T}, Cint, Cint),
-                      X, 1, Y, 1, out, 1, length(out))
+                ccall(($(string("vDSP_", fa,suff)),libacc), Void,
+                      (Ptr{$T},Int64, Ptr{$T}, Int64, Ptr{$T}, Int64, Int64),
+                      X, 1, Y, 1, out, 1, length(X))
                 return out
             end
         end
     end
 end
+
+
+## This defines the mapping between Julia function names and Accelerate vDSP names that
+## return a scalar value.
+## Each tuple is of the form (:julia_name, :accelerate_name); accelerate names should
+## be stored without the "vDSP" prefix. The accelerate names are stored without type
+## suffix; it is assumed that there is no suffix for Float32, and "D" suffix for Float64.
+##
+## This assumes arguments of the form (input_vec_a, stride_a,  output_scalar, length)
+const vDSPscalar = ((:sum,  :sve), (:summag, :svemg), (:sumsqr, :svesq),
+                    (:maximum, :maxv), (:minimum, :minv),  (:mean, :meanv))
+
+for (T, suff) in ((Float64, "D"), (Float32, ""))
+
+    for (f, fa) in vDSPscalar
+        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
+        @eval begin
+            function ($f)(X::Vector{$T})
+                out = Ref{$T}(0.0)
+                ccall(($(string("vDSP_", fa,suff)),libacc),Void,
+                      (Ptr{$T},Cint, Ref{$T}, Cint),
+                      X, 1, out, length(X))
+                return out[]
+            end
+        end
+    end
+
+    for (f, fa) in ((:findmax, :maxvi), (:findmin, :minvi))
+        @eval begin
+            function ($f)(X::Vector{$T})
+                index = Ref{Int}(0)
+                val = Ref{$T}(0.0)
+                ccall(($(string("vDSP_", fa, suff), libacc)),  Void,
+                      (Ptr{$T}, Int64,  Ref{$T}, Ref{Int}, UInt64),
+                      X, 1, val, index, length(X))
+                return (val[], index[]+1)
+            end
+        end
+    end
+end
+
 
 end # module
