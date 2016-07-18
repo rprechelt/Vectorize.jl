@@ -67,14 +67,20 @@ const identifier = Dict(Int8 => "V8s", Int16 => "V16s", Int32 => "V32s", Int64 =
                         Float32 => "V32f", Float64 => "V64f")
 
 #### Yeppp Arithmetic taking two arguments and returning vector
-for (f, fname) in ((:add, "Add"),  (:sub, "Subtract"),  (:mul, "Multiply"), (:max, "Max"),
-                   (:min, "Min"))
+for (f, fname, name) in ((:add, "Add", "addition"),  (:sub, "Subtract", "subtraction"),
+                   (:mul, "Multiply", "multiplication"), (:max, "Max", "maximum"),
+                   (:min, "Min", "minimum"))
     for (argtype1, argtype2, returntype) in yepppcore
         # generate Yeppp function name
         yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2],
                            "_", identifier[returntype])
         addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f") 
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($argtype1)}, Y::Vector{$($argtype2)})`
+            Implements element-wise **$($name)** over two **Vector{$($argtype1)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($returntype)}**
+            """ ->
             function ($f)(X::Vector{$argtype1}, Y::Vector{$argtype2})
                 len = length(X)
                 out = Array($returntype, len)
@@ -90,15 +96,26 @@ end
 #### YepppMath functions returning vectors
 for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"), (:exp, "Exp")]
     yepppname = string("yepMath_$(fname)_V64f_V64f")
+    name = string(f)
     f! = Symbol("$(f)!")
     # register functions for build
     addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f") 
     addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)") 
     @eval begin
+         @doc """
+        `$($f)(X::Vector{Float64})`
+        Implements element-wise **$($name)** over a **Vector{Float64}**. Allocates
+        memory to store result. *Returns:* **Vector{Float64}**
+        """ ->
         function ($f)(X::Vector{Float64}) # regular syntax
             out = Array(Float64, length(X))
             return ($f!)(out, X)
         end
+        @doc """
+        `$($f!)(result::Vector{Float64}, X::Vector{Float64})`
+        Implements element-wise **$($name)** over a **Vector{Float64}** and overwrites
+        the result vector with computed value. *Returns:* **Vector{Float64}** `result`
+        """ ->
         function ($f!)(out::Vector{Float64}, X::Vector{Float64}) # in place syntax
             len = length(X)
             ccall(($(yepppname, libyeppp)), Cint,
@@ -111,10 +128,15 @@ end
 
 ## YepppCore - functions that return scalars
 for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
-    for (f, fname) in [(:sum, "Sum"), (:sumsqr, "SumSquares")]
+    for (f, fname, name) in [(:sum, "Sum", "sum"), (:sumsqr, "SumSquares", "sum-of-squares")]
         yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)
         addfunction(functions, (f, (T,)), "Vectorize.Yeppp.$f")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)})`
+            Computes the **$($name)** of a **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T})
                 len = length(X)
                 out = Array($T, 1)

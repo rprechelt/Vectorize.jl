@@ -139,15 +139,26 @@ end
 
 # Basic operations on two args
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
-    for (f, fvml) in [(:add, :Add), (:mul, :Mul), (:sub, :Sub), (:div, :Div), (:pow, :Pow)]
+    for (f, fvml, name) in [(:add, :Add, "addition"), (:mul, :Mul, "multiplcation"),
+                      (:sub, :Sub, "subtraction"), (:div, :Div, "division"), (:pow, :Pow, "power")]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
@@ -160,15 +171,25 @@ end
 
 # Real only returning real - two args
 for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
-    for (f, fvml) in [(:hypot, :Hypot), (:atan2, :Atan2)]
+    for (f, fvml, name) in [(:hypot, :Hypot, "hypotenuse"), (:atan2, :Atan2, "atan2")]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
@@ -181,15 +202,25 @@ end
 
 # Complex only returning complex - two arg
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
-    for (f, fvml) in [(:mulbyconj, :MulByConj)]
+    for (f, fvml, name) in [(:mulbyconj, :MulByConj, "multiply-by-conjugate")]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
+            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
@@ -207,13 +238,24 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
                      (:atan, :Atan), (:cos, :Cos), (:sin, :Sin),
                       (:tan, :Tan), (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
         f! = Symbol("$(f)!")
+        name = string(f)
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
@@ -234,13 +276,24 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
                       (:gamma, :TGamma), (:floor, :Floor), (:trunc, :Trunc),
                       (:round, :Round), (:frac,  :Frac), (:abs, :Abs), (:sqr, :Sqr)]
         f! = Symbol("$(f)!")
+        name = string(f)
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
@@ -253,15 +306,25 @@ end
 
 # Operations on complex returning complex - one arg
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
-    for (f, fvml) in [(:conj,  :Conj)]
+    for (f, fvml, name) in [(:conj,  :Conj, "conjugation")]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
+             @doc """
+            `$($f)(X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
+            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{$T}, X::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
@@ -275,15 +338,25 @@ end
 
 # Operations on complex returning real - one arg
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
-    for (f, fvml) in [(:abs, :Abs),  (:angle,  :Arg) ]
+    for (f, fvml, name) in [(:abs, :Abs, "absolute-value"),  (:angle,  :Arg, "complex-argument") ]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (real(T),T)), "Vectorize.VML.$(f!)")
         @eval begin
+            @doc """
+            `$($f)(X::Vector{$($T)})`
+            Calculates the **$($name)** element-wise over a **Vector{$($T)}**. Allocates
+            memory to store result. *Returns:* **Vector{$($T)}**
+            """ ->
             function ($f)(X::Vector{$T})
                 out = Array(real($T), length(X))
                 return $(f!)(out, X)
             end
+            @doc """
+            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
+            Calculates the **$($name)** element-wise over a **Vector{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            """ ->
             function ($f!)(out::Vector{real($T)}, X::Vector{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{real($T)}),
