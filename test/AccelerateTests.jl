@@ -98,8 +98,8 @@ for T in (Float32, Float64)
         Y = 10*randn(N)
         @testset "Testing $fa::$T" for (f, fa) in [(:+, :add), (:-, :sub), (:.*, :mul), (:./, :div)]
             @eval fb = $f
-#            @eval fa = Vectorize.Accelerate.$fa
-            @test fb(X, Y) ≈ fb(X, Y)
+            @eval facc = Vectorize.Accelerate.$fa
+            @test fb(X, Y) ≈ facc(X, Y)
         end
     end
 end

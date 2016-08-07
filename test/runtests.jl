@@ -7,7 +7,11 @@ else
 end
 
 ## Test Apple Accelerate
-@osx? include("AccelerateTests.jl") : println("Accelerate not present. Aborting Accelerate tests")
+if is_apple()
+    include("AccelerateTests.jl")
+else
+    println("Accelerate not present. Aborting Accelerate tests")
+end
 
 ## Test Yeppp
 include("YepppTests.jl")
@@ -16,4 +20,7 @@ include("YepppTests.jl")
 if Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"]) != ""
     include("VMLTests.jl")
 end
+
+## Running tests over benchmarked Vectorized functions
+include("VectorizeTests.jl")
 

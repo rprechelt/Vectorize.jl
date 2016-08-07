@@ -59,6 +59,9 @@ function benchmarkSingleArgFunction(fname, fnames,
 
     # write chosen file into IOStream
     write(file, "\n$(fname)(X::Vector{$T}) = $(fbest)(X)\n")
+    # docs = @doc fbest
+    # write(file, "\n\"\"\"\n", docs, "\n\"\"\"\n")
+    # write(file, "$(fname)(X::Vector{$T}) = $(fbest)(X)\n")
     println("BENCHMARK: $(fname)(Vector{$T}) mapped to $(fbest)()\n")
 end
 

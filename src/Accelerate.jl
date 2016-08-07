@@ -87,7 +87,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
             """ ->
             function ($f)(X::Vector{$T}, Y::Vector{$T})
                 out = Array($T, length(X))
-                return ($f!)(out, X, Y)
+                return ($f!)(out, Y, X)
             end
         end
         @eval begin

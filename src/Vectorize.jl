@@ -59,6 +59,7 @@ else
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end
+
 if isfile(libyeppp)
     include("Yeppp.jl") # include Yeppp if present
 end
