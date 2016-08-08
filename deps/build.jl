@@ -167,7 +167,7 @@ function benchmarkThreeArgFunction(fname, fnames,
 end
 
 """
-`trycmd(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
+`trycmd(cmd::Cmd, msg::String="", err::String="")::String`
 This function attemps to run the shell command specified by `cmd` using `run`.
 If `cmd` returns successfully, it will print `msg` using info().
 If `run(cmd)` throws an exception (the shell command returns non-zero),
@@ -176,7 +176,7 @@ then the function throws an error and prints the `err` argument.
 Note: This function does not return the value of the command to the caller. However,
 prints to STD_OUT by the `run` command will print automatically from the shell process.
 """
-function trycmd(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
+function trycmd(cmd::Cmd; msg::String="", err::String="")
     try
         run(cmd)
         if msg == "" return else info(msg) end
@@ -188,13 +188,13 @@ function trycmd(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
 end
 
 """
-`trycmd_read(cmd::Cmd, msg::ASCIIString="", err::ASCIIString="")::ASCIIString`
+`trycmd_read(cmd::Cmd, msg::String="", err::String="")::String`
 This function attemps to run the shell command specified by `cmd` using `readall`.
 If `cmd` returns successfully, it will return its result to the caller and print `msg`.
 If `readall(cmd)`/`readstring(cmd)` throws an exception (the shell command returns non-zero),
 then the function throws an error and prints the `err` argument.
 """
-function trycmd_read(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
+function trycmd_read(cmd::Cmd; msg::String="", err::String="")
     try
         result = readstring(cmd) # Julia v0.5 and above
         if msg == "" return result else info(msg) end
@@ -207,13 +207,13 @@ function trycmd_read(cmd::Cmd; msg::ASCIIString="", err::ASCIIString="")
 end
 
 """
-`prompt_yn(prompt::ASCIIString)::Bool`
+`prompt_yn(prompt::String)::Bool`
 
 Prompts the user for a y or n response (y/n). Continually prompts
 until user enters a valid response. Prompt string should be provided without
 colon and whitespace.
 """
-function prompt_yn(prompt::ASCIIString)
+function prompt_yn(prompt::String)
     print(prompt, " [y/n]:  ")
     input = chomp(readline())
     while input != "y" && input != "n"
