@@ -7,7 +7,7 @@ else
 end
 
 ## Test Apple Accelerate
-if is_apple()
+@static if is_apple()
     include("AccelerateTests.jl")
 else
     println("Accelerate not present. Aborting Accelerate tests")

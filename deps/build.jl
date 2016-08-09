@@ -250,7 +250,11 @@ else
     trycmd(`mkdir $(pkgdir)deps/src`)
     trycmd(`mkdir $(pkgdir)deps/src/yeppp`)
     yeppploc = "http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2"
-    @osx? run(pipeline(`curl -L $(yeppploc)`, stdout="$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2")) : trycmd(`wget -P downloads $(yeppploc)`, err="Unable to download Yeppp!")
+    @static if is_apple()
+        run(pipeline(`curl -L $(yeppploc)`, stdout="$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2"))
+    else
+        trycmd(`wget -P downloads $(yeppploc)`, err="Unable to download Yeppp!")
+    end
     trycmd(`tar -xjvf $(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2 -C $(pkgdir)deps/src/yeppp --strip-components=1`)
     info("====== Successfully installed Yeppp! ======")
 end

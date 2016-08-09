@@ -12,6 +12,30 @@ println("===== Testing Vectorize Benchmarked Functions =====")
 N = 1000
 srand(13)
 
+
+# Tests whether a function exists - 1 arg
+function testexist(f, X)
+    try
+        f(X)
+    catch err
+        if !(isa(err, UndefVarError))
+            error("Testing $(fvec) has failed")
+        end
+    end
+end
+
+
+# Tests whether a function exists - 2 arg
+function testexist(f, X, Y)
+    try
+        f(X, Y)
+    catch err
+        if !(isa(err, UndefVarError))
+            error("Testing $(fvec) has failed")
+        end
+    end
+end
+
 # Real Arithmetic
 for T in [Float32, Float64]
     @testset "Vectorize: Basic Arithmetic::$T" begin
@@ -20,8 +44,10 @@ for T in [Float32, Float64]
         @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:mul, .*), (:div, ./),
                                                   (:hypot, :hypot), (:atan2, :atan2), (:pow, .^)]
             @eval fbase = $fb
-            @eval fvml = Vectorize.$f
-            @test fbase(X, Y) ≈ fvml(X, Y)
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, X, Y)
+            @test fbase(X, Y) ≈ fvec(X, Y)
         end
     end
 end
@@ -34,13 +60,18 @@ for T in [Complex{Float32}, Complex{Float64}]
         @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
                                                   (:pow, .^)]
             @eval fbase = $fb
-            @eval fvml = Vectorize.$f
-            @test fbase(X, Y) ≈ fvml(X, Y)
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, X, Y)
+            @test fbase(X, Y) ≈ fvec(X, Y)
         end
 
         @testset "Testing $f::$T" for f in [:mulbyconj]
-            @eval fvml = Vectorize.$f
-            @test X .* conj(Y) ≈ fvml(X, Y)
+            
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, X, Y)
+            @test X .* conj(Y) ≈ fvec(X, Y)
         end
     end
 end
@@ -56,26 +87,32 @@ for T in [Float32, Float64]
                                             :trunc, :cos, :sin, :tan, :cosh, :sinh, :tanh,
                                             :cbrt, :erf, :erfc, :lgamma, :gamma]
             @eval fb = $f
-            @eval fvml = Vectorize.$f
-            @test fb(X) ≈ fvml(X)
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, X)
+            @test fb(X) ≈ fvec(X)
         end
 
         @testset "Testing $f::$T" for f in [:sqrt, :log10, :acosh, :asinh, :log]
             @eval fb = $f
-            @eval fvml = Vectorize.$f
-            @test fb(Y) ≈ fvml(Y)
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, Y)
+            @test fb(Y) ≈ fvec(Y)
         end
 
         # @testset "Testing $f::$T" for f in [:erfcinv]
         #     @eval fb = $f
-        #     @eval fvml = Vectorize.$f
-        #     @test fb(W) ≈ fvml(W)
+        #     @eval fvec = Vectorize.$f
+        #     @test fb(W) ≈ fvec(W)
         # end
         
         @testset "Testing $f::$T" for f in [:acos, :asin, :atan]#, :atanh] #, :erfinv]
             @eval fb = $f
-            @eval fvml = Vectorize.$f
-            @test fb(Z) ≈ fvml(Z)
+            @eval fvec = Vectorize.$f
+            # need to catch functions that aren't available from any framework
+            testexist(fvec, Z)
+            @test fb(Z) ≈ fvec(Z)
         end
     end
 end
@@ -89,10 +126,10 @@ for T in [Complex{Float32}, Complex{Float64}]
                                             :sqrt, :log10, :acosh, :asinh, :log, :acos, :asin,
                                             :atan, :conj] #, :atanh]
             @eval fb = $f
-            @eval fvml = Vectorize.$f
-            @test fb(X) ≈ fvml(X)
+            @eval fvec = Vectorize.$f
+            @test fb(X) ≈ fvec(X)
         end
     end
 end
 
-# println("===== Vectorize Tests Successful =====\n\n")
+println("===== Vectorize Tests Successful =====\n\n")
