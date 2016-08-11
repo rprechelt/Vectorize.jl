@@ -279,3 +279,5 @@ for ((f, T), options) in functions
     end
 end
 close(file)
+
+Base.compilecache("Vectorize")
