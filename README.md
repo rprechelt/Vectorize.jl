@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/rprechelt/Vectorize.jl.svg?branch=master)](https://travis-ci.org/rprechelt/Vectorize.jl)
 
 ## Features
-Vectorize.jl provides a unified interface to the high-performance vectorized functions provided by Apple's [Accelerate](https://developer.apple.com/reference/accelerate) framework (OS X only), Intel's [VML](https://software.intel.com/en-us/node/521751) (part of MKL) and [Yeppp!](http://www.yeppp.info/) These can be accessed using the `Vectorize.LibraryName.Function()` syntax i.e. 
+Vectorize.jl provides a unified interface to the high-performance vectorized functions provided by Apple's [Accelerate](https://developer.apple.com/reference/accelerate) framework (OS X only), Intel's [VML](https://software.intel.com/en-us/node/521751) (part of MKL) and [Yeppp!](http://www.yeppp.info/); currently, over 160 functions are supported. These can be accessed using the `Vectorize.LibraryName.Function()` syntax i.e. 
 
     Vectorize.Accelerate.exp(X)
     Vectorize.VML.erf(X)
