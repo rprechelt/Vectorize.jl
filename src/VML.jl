@@ -106,14 +106,20 @@ const VML_ERRMODE_DEFAULT  = VML_ERRMODE_ERRNO | VML_ERRMODE_CALLBACK | VML_ERRM
 const VML_FTZDAZ_ON        =  0x00280000     # faster denormal value processing
 const VML_FTZDAZ_OFF       =  0x00140000     # accurate denormal value processing
 
+
 """
 This function sets the default values for the VME library on import, 
 allowing for the precompilation of the rest of the package. 
 """
 function __init__()
-    # VML default values
+    
+    # Open librt
+    Libdl.dlopen(librt)
+
+    # Set default mode
     VML.setmode(VML.VML_HA | VML.VML_ERRMODE_DEFAULT | VML.VML_FTZDAZ_ON)
 end
+
 
 """
 Sets accuracy, error, and FTZDAZ modes for all VML functions. This is automatically
