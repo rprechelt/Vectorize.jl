@@ -497,6 +497,117 @@ Functions
 		Accelerate(X::Float32)
 		Accelerate(X::Float64)
 
+.. function:: pow(X, Y)
+
+	      Calculates a vector raised element-wise to the power of another vector::
+
+		VML(X::Float32, Y::Float32)
+		VML(X::Float64, Y::Float64)
+
+.. function:: pow!(result, X, Y)
+
+	      Calculates a vector raised element-wise to the power of another vector and stores it in result::
+
+		VML(X::Float32, Y::Float32)
+		VML(X::Float64, Y::Float64)
+
+.. function:: pow2o3(X)
+
+	      Raises each element of a vector to the `2/3` power::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: pow2o3!(result, X)
+
+	      Raises each element of a vector to the `2/3` power stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: pow3o2(X)
+
+	      Raises each element of a vector to the `3/3` power::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: pow3o2!(result, X)
+
+	      Raises each element of a vector to the `3/2` power stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: exponent(X)
+
+	      Computes the element-wise exponent of a vector::
+
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: exponent!(result, X)
+
+	      Computes element-wise exponent of a vector and stores it in result::
+
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: sqrt(X)
+
+	      Computes the element-wise square root of a vector minus one::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		VML(X::Complex{Float32})
+		VML(X::Complex{Float64})
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: sqrt!(result, X)
+
+	      Computes the element-wise square root of a vector and stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		VML(X::Complex{Float32})
+		VML(X::Complex{Float64})
+		Yeppp(X::Float64)
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: invsqrt(X)
+
+	      Computes the element-wise square root of a vector minus one::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: invsqrt!(result, X)
+
+	      Computes the element-wise square root of a vector and stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+
+.. function:: invsqrt(X)
+
+	      Computes the element-wise square root of a vector minus one::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+
+.. function:: invsqrt!(result, X)
+
+	      Computes the element-wise square root of a vector and stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+
 .. function:: add(X, Y)
 
 	      Computes the element-wise addition two vectors::
@@ -641,4 +752,88 @@ Functions
 		VML(X::Complex{Float64}, Y::Complex{Float64})
 		Accelerate(X::Float32, Y::Float32)
 		Accelerate(X::Float64, Y::Float64)
+
+.. function:: abs(X)
+
+	      Computes the element-wise absolute value of a vector::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		VML(X::Complex{Float32})
+		VML(X::Complex{Float64})
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: abs!(result, X)
+
+	      Computes the element-wise absolute value of a vector and stores it in result::
+
+		VML(X::Float32)
+		VML(X::Float64)
+		VML(X::Complex{Float32})
+		VML(X::Complex{Float64})
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: max(X, Y)
+
+	      Computes the element-wise maximum value of two vectors::
+
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+		Yeppp(X::Float64, Y::Float64)
+
+.. function:: max!(result, X, Y)
+
+	      Computes the element-wise maximum value of two vectors and stores it in result::
+
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+	      	Yeppp(X::Float64, Y::Float64)
+
+.. function:: min(X, Y)
+
+	      Computes the element-wise minimum value of two vectors::
+
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+		Yeppp(X::Float64, Y::Float64)
+
+.. function:: min!(result, X, Y)
+
+	      Computes the element-wise minimum value of two vectors and stores it in result::
+
+		Accelerate(X::Float32, Y::Float32)
+		Accelerate(X::Float64, Y::Float64)
+		Yeppp(X::Float64, Y::Float64)
+
+
+.. function:: maximum(X)
+
+	      Returns the maximum value contained within a vector::
+
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+.. function:: mininum(X)
+
+	      Returns the minimum value contained within a vector::
+
+		Accelerate(X::Float32)
+		Accelerate(X::Float64)
+
+
+
+.. function:: hypot(X, Y)
+
+	      Computes the element-wise hypotenuse of a triangle with sides given by two vectors::
+
+		VML(X::Float32, Y::Float32)
+		VML(X::Float64, Y::Float64)
+
+.. function:: hypot!(result, X, Y)
+
+	      Computes the element-wise hypotenuse of a triangle with sides given by two vectors and stores it in result::
+		VML(X::Float32, Y::Float32)
+		VML(X::Float64, Y::Float64)
 

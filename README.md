@@ -24,7 +24,7 @@ Lastly, Vectorize.jl provides a `@vectorize` macro that automatically converts a
 
 This macro provides an easy method for code to be quickly converted to use Vectorize.jl with little additional effort. 
 
-The performance benefits are significant; the two plots below the runtime reduction for a small selection of operators available in Vectorize.jl. This data was collected on a 2.5GHz Intel i7 running on OS X; each function was called immediately prior to benchmarking to ensure precompilation, before calculating the average over ten executions using `Vector{Float64}` of length 100.. 
+The performance benefits are significant; the two plots below the runtime reduction for a small selection of operators available in Vectorize.jl. This data was collected on a 2.5GHz Intel i7 running on OS X; each function was called immediately prior to benchmarking to ensure precompilation, before calculating the average over ten executions using `Vector{Float64}` of length 100. 
 
 ![Accelerate Benchmark](https://raw.githubusercontent.com/rprechelt/Vectorize.jl/master/doc/images/accelerate.png)
 
