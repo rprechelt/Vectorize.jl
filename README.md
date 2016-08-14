@@ -24,6 +24,12 @@ Lastly, Vectorize.jl provides a `@vectorize` macro that automatically converts a
 
 This macro provides an easy method for code to be quickly converted to use Vectorize.jl with little additional effort. 
 
+The performance benefits are significant; the two plots below the runtime reduction for a small selection of operators available in Vectorize.jl. This data was collected on a 2.5GHz Intel i7 running on OS X; each function was called immediately prior to benchmarking to ensure precompilation, before calculating the average over ten executions. 
+
+![Accelerate Benchmark](https://raw.githubusercontent.com/rprechelt/Vectorize.jl/master/doc/images/accelerate.png)
+
+![Vectorize Benchmark](https://raw.githubusercontent.com/rprechelt/Vectorize.jl/master/doc/images/vectorize.png)
+
 These functions can provide orders of magnitude higher-performance than the standard functions in Julia; over 10-fold improvements are common for functions throughout the three libraries. Since these functions are designed to operate on moderate-to-large sized arrays, they tend to be less performant that standard Julia functions for arrays of length less than 10 elements; in that case, it is best not to use Vectorize.jl. 
 
 Vectorize.jl will transparently select from the different frameworks that are available on your machine; you are not required to have any particular framework installed (although having all three tends to provide the best performance as different frameworks have different strengths). For users not running OS X, we strongly recommend installing Intel's VML (free for open-source projects under the community license - other licenses are available) as the only other library available for non-OSX systems is Yeppp, and Yeppp only provides a very small collection of functions.
