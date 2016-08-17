@@ -4,9 +4,9 @@ include("helper.jl")
 if isfile("$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
 else
     info("====== Installing Yeppp! into local directory ======")
-    trycmd(`mkdir $(pkgdir)deps/downloads`)
-    trycmd(`mkdir $(pkgdir)deps/src`)
-    trycmd(`mkdir $(pkgdir)deps/src/yeppp`)
+    trycmd(`mkdir $(pkgdir)deps/downloads`, err="Unable to create Vectorize/deps/downloads")
+    trycmd(`mkdir $(pkgdir)deps/src`, err="Unable to create Vectorize/src/")
+    trycmd(`mkdir $(pkgdir)deps/src/yeppp`, err="Unable to create Vectorize/src/yeppp")
     yeppploc = "http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2"
     @static if is_apple()
         run(pipeline(`curl -L $(yeppploc)`, stdout="$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2"))
