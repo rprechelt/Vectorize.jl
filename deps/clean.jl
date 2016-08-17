@@ -14,9 +14,9 @@ pkgdir = currdir[1:end-13]
 
 # Clean up directory status
 @static if is_windows()
-    run(`del $(pkgdir)src\\Functions.jl`)
-    run(`copy NUL Functions.jl`)
-    run(`move Functions.jl $(pkdir)src`)
+    run(`cmd /C del $(pkgdir)src\\Functions.jl`)
+    run(`cmd /C copy NUL Functions.jl`)
+    run(`cmd /C move Functions.jl $(pkgdir)src`)
 else
     run(`rm -rf $(pkgdir)src/Functions.jl`)
     run(`touch $(pkgdir)src/Functions.jl`)

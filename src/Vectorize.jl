@@ -48,16 +48,21 @@ end
 ## Find Yeppp library
 libyeppp_ = Libdl.find_library(["libyeppp"])
 if libyeppp_ != ""
-    const global libyeppp = libyeppp_
+    @eval const global libyeppp = libyeppp_
 else
     currdir = @__FILE__
-    bindir = currdir[1:end-16]*"deps/src/yeppp/binaries/"
+    @static if is_windows()
+        bindir = currdir[1:end-16]*"deps\\src\\yeppp\\binaries\\"
+    else
+        bindir = currdir[1:end-16]*"deps/src/yeppp/binaries/"
+    end
+    
     if OS == :Darwin
         @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
     elseif OS == :Linux
         @eval const global libyeppp = bindir*"linux/x86_64/libyeppp.so"
     elseif OS == :Windows
-        @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
+        @eval const global libyeppp = bindir*"windows\\amd64\\yeppp.dll"
     end
 end
 
