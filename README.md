@@ -34,16 +34,16 @@ These functions can provide orders of magnitude higher-performance than the stan
 
 Vectorize.jl will transparently select from the different frameworks that are available on your machine; you are not required to have any particular framework installed (although having all three tends to provide the best performance as different frameworks have different strengths). For users not running OS X, we strongly recommend installing Intel's VML (free for open-source projects under the community license - other licenses are available) as the only other library available for non-OSX systems is Yeppp, and Yeppp only provides a very small collection of functions.
 
-This package currently supports over 40 functions over `Float32`, `Float64`, `Complex{Float32}`, and `Complex{Float64}`; `Vectorize.Yeppp` also provides access to various Yeppp functions over `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Int8`, `Int16`, `Int32`, and `Int64` (although these are not benchmarked as neither Accelerate or VML provide equivalent functions). Every function by VML is currently supported, alongside the vast majority of optimized Yeppp functions and an equivalent portion of Accelerate. Please see the documentation for a complete list of provided functions and implementations. 
-
-*Please note, this package is still in* **beta** *and has not been tested on all architectures and operating systems. Currently OS X and Linux on `x86_64` are the only officially supported operating systems and architecture, but full Windows support will be added in the next week or two, and other architectures may very well work as is (but they have not been tested). 
+This package currently supports over 40 functions over `Float32`, `Float64`, `Complex{Float32}`, and `Complex{Float64}`; `Vectorize.Yeppp` also provides access to various Yeppp functions over `UInt8`, `UInt16`, `UInt32`, `UInt64`, `Int8`, `Int16`, `Int32`, and `Int64` (although these are not benchmarked as neither Accelerate or VML provide equivalent functions). Every function provided by VML is currently supported, alongside the vast majority of optimized Yeppp functions and an equivalent portion of Accelerate. Please see the documentation for a complete list of provided functions and implementations. 
 
 ## Installation 
 To install the latest version of Vectorize from `master`, run
 
     Pkg.clone("http://github.com/rprechelt/Vectorize.jl")
 
-from a Julia REPL. 
+from a Julia REPL on OS X, Linux, or Windows.
+
+On Windows, you will need `wget64` and `7-Zip` installed and available in your `PATH` (in order to download and decompress Yeppp)
 
 Once the package has finished cloning, run
 
