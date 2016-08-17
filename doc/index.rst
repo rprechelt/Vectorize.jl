@@ -37,7 +37,6 @@ This package currently supports over 40 functions over ``Float32``, ``Float64``,
 
    installation
    functions
-   benchmarks 
    devdocs
 
    

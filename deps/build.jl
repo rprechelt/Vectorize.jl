@@ -13,6 +13,18 @@ if VERSION < v"0.5.0-dev" # Julia v0.4
     readstring(cmd) = readall(cmd)
 end
 
+"""
+This function handles automatic conversion of OS X/Linux directories
+by converting / into \ on Windows platfors. 
+"""
+function parsedir(dirname)
+    @static if is_windows()
+        return replace(dirnae, "/", "\\")
+    else
+        return dirname
+    end
+end
+
 
 """
 This function selects a single implementation from `fnames` and associates it
@@ -235,32 +247,40 @@ include("clean.jl")
 # compute package directory location
 currdir = @__FILE__
 pkgdir = currdir[1:end-13]
-function_location = pkgdir*"src/Functions.jl"
+function_location = parsedir(pkgdir*"src/Functions.jl")
 
 # detect architecture
 if Sys.ARCH != :x86_64
     error("Vectorize.jl currently only supports x86_64; your detected architecture is $(Sys.ARCH)")
+    exit(1)
 end
 
+
+
 # Locate or download Yeppp! 
-if isfile("$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2") || (Libdl.find_library(["libyeppp"]) != "")
+if isfile(parsedir("$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2")) || (Libdl.find_library(["libyeppp"]) != "")
 else
     info("====== Installing Yeppp! into local directory ======")
-    trycmd(`mkdir $(pkgdir)deps/downloads`)
-    trycmd(`mkdir $(pkgdir)deps/src`)
-    trycmd(`mkdir $(pkgdir)deps/src/yeppp`)
-    yeppploc = "http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2"
+    mkdownloads = parsedir("mkdir $(pkgdir)deps/downloads")
+    trycmd(`$(mkdownloads)`)
+    mksrc = parsedir("mkdir $(pkgdir)deps/src")
+    trycmd(`$(mksrc)`)
+    mkyeppp = parsedir("mkdir $(pkgdir)deps/src/yeppp")
+    trycmd(`$(mkyeppp)`)
+    yeppploc = parsedir("http://bitbucket.org/MDukhan/yeppp/downloads/yeppp-1.0.0.tar.bz2")
     @static if is_apple()
         run(pipeline(`curl -L $(yeppploc)`, stdout="$(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2"))
     else
-        trycmd(`wget -P downloads $(yeppploc)`, err="Unable to download Yeppp!")
+        getyeppp = parsedir("wget -P downloads $(yeppploc)") 
+        trycmd(`$(getyeppp)`, err="Unable to download Yeppp!")
     end
-    trycmd(`tar -xjvf $(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2 -C $(pkgdir)deps/src/yeppp --strip-components=1`)
+    tarcmd = parsedir("tar -xjvf $(pkgdir)deps/downloads/yeppp-1.0.0.tar.bz2 -C $(pkgdir)deps/src/yeppp --strip-components=1")
+    trycmd(`$(tarcmd)`)
     info("====== Successfully installed Yeppp! ======")
 end
 
 # Have to import vectorize after Yeppp is downloaded
-push!(LOAD_PATH, "$(pkgdir)src/")
+push!(LOAD_PATH, parsedir("$(pkgdir)src/"))
 using Vectorize
 
 # available functions - Yeppp, VML, Accelerate register against this dictionary
@@ -268,7 +288,7 @@ functions = Vectorize.functions
 
 # Run the benchmarking process
 N = 1_000 # length of each vector
-file = open("$(pkgdir)src/Functions.jl", "a")
+file = open(parsedir("$(pkgdir)src/Functions.jl"), "a")
 for ((f, T), options) in functions
     if length(T) == 1
         benchmarkSingleArgFunction(f, options, T[1], file, 1_000)
