@@ -28,7 +28,7 @@ else # using Vectorize.jl provided yppp
         @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
     elseif OS == :Linux
         @eval const global libyeppp = bindir*"linux/x86_64/libyeppp.so"
-    elseif OS == :Windows
+    elseif OS == :NT
         @eval const global libyeppp = bindir*"windows/amd64/yeppp.dll"
     end
 end
