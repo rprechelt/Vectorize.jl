@@ -19,7 +19,7 @@ by converting / into \ on Windows platfors.
 """
 function parsedir(dirname)
     @static if is_windows()
-        return replace(dirnae, "/", "\\")
+        return replace(dirname, "/", "\\")
     else
         return dirname
     end
