@@ -19,73 +19,12 @@ else
     OS = Sys.KERNEL
 end
 
-## Detect architecture - currently only OS X
-AVX1 = false
-AVX2 = false
-AVX512 = false
-
-# Check for AVX1.0
-try
-    # use sysctl on OSX and /proc/cpuinfo on Linux
-    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.features`, `grep AVX`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX`))
-    if match(r"AVX1.0", result) == Void
-        error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
-    else
-        AVX1 = true
-    end
-catch
-    # Unable to find AVX1
-end
-
-# Check for AVX2.0
-try
-    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX2`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.features`, `grep AVX2`)) 
-    if match(r"AVX2", result) == Void
-        error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
-    else
-        AVX2 = true
-    end
-catch
-    # Unable to find AVX2
-end
-
-# Check for AVX512
-try
-    result = OS == :Darwin ? readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) : readstring(pipeline(`cat /proc/cpuinfo`, `grep machdep.cpu.leaf7_features`, `grep AVX512`)) 
-    if match(r"AVX512", result) == Void
-    else
-        AVX2 = true
-    end
-catch
-    # Unable to find AVX2
-end
-
-# Check for AVX512
-try
-    result = readstring(pipeline(`sysctl -a`, `grep machdep.cpu.leaf7_features`, `grep AVX512`))
-    if match(r"AVX512", result) == Void
-        error("No compatible VML architecture found - Vectorize supports AVX1.0, AVX2.0 and AVX512")
-    else
-        AVX512 = true
-    end
-catch     #Unable to find AVX512
-    if AVX1 == false && AVX2 == false && AVX512 == false
-        error("Current platform does not support AVX, AVX2 or AVX512")
-    end
-
-end
-
-# Use the newest version of VML available
-if AVX1
-    const global libvml = Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"])
-elseif AVX2
-    const global libvml = Libdl.find_library(["libmkl_vml_avx2"], ["/opt/intel/mkl/lib"])
-elseif AVX512
-    const global libvml = Libdl.find_library(["libmkl_vml_avx512"], ["/opt/intel/mkl/lib"])
-end
-
 # Library dependency for VML
 const global librt = Libdl.find_library(["libmkl_rt"], ["/opt/intel/mkl/lib"])
+
+if librt == ""
+    error("Unable to load librt")
+end
 Libdl.dlopen(librt)
 
 # ======= VML FUNCTION ACCURACY CONTROL ======= #
@@ -126,7 +65,7 @@ Sets accuracy, error, and FTZDAZ modes for all VML functions. This is automatica
 called in init() but can also be called to change the modes during runtime. 
 """
 function setmode(mode)
-    oldmode = ccall(("_vmlSetMode", libvml),  Cuint,
+    oldmode = ccall(("vmlSetMode", librt),  Cuint,
                     (Cuint,),
                     mode)
     return oldmode
@@ -137,7 +76,7 @@ Returns the accuracy, error, and FTZDAZ modes for all VML functions". This is au
 called in init() but can also be called to change the modes during runtime". 
 """
 function getmode()
-    status = ccall(("_vmlGetMode", libvml),  Cuint,
+    status = ccall(("vmlGetMode", librt),  Cuint,
                    (), )
     return status
 end
