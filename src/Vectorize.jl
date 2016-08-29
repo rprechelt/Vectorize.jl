@@ -71,7 +71,7 @@ if isfile(libyeppp)
 end
 
 ## Find VML
-const global libvml = Libdl.find_library(["libmkl_vml_avx"], ["/opt/intel/mkl/lib"])
+const global libvml = Libdl.find_library(["libmkl_rt"], ["/opt/intel/mkl/lib"])
 if libvml != ""
     include("VML.jl")
 end
