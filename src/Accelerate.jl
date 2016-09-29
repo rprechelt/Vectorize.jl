@@ -41,7 +41,7 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
             Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
             memory to store result. *Returns:* **Vector{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = similar(X)
                 return ($f!)(out, X)
             end
@@ -50,7 +50,7 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
             Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T})
                 ccall(($(string("vv", fa,suff)),libacc),Void,
                       (Ptr{$T},Ptr{$T},Ptr{Cint}),
                       out,X,&length(X))
@@ -85,7 +85,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
             Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
             memory to store result. *Returns:* **Vector{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T}, Y::Vector{$T})
+            function ($f)(X::Array{$T}, Y::Array{$T})
                 out = Array($T, length(X))
                 return ($f!)(out, Y, X)
             end
@@ -96,7 +96,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
             Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
                 ccall(($(string("vDSP_", fa,suff)),libacc), Void,
                       (Ptr{$T},Int64, Ptr{$T}, Int64, Ptr{$T}, Int64, Int64),
                       X, 1, Y, 1, out, 1, length(out))
@@ -128,7 +128,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
             Computes the **$($name)** of a **Vector{$($T)}**.
             *Returns:* **$($T)**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = Ref{$T}(0.0)
                 ccall(($(string("vDSP_", fa,suff)),libacc),Void,
                       (Ptr{$T},Cint, Ref{$T}, Cint),
@@ -146,7 +146,7 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
             Computes the **$($name)** element-wise over a **Vector{$($T)}**.
             *Returns:* **$(($T, UInt64))**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 index = Ref{Int}(0)
                 val = Ref{$T}(0.0)
                 ccall(($(string("vDSP_", fa, suff), libacc)),  Void,

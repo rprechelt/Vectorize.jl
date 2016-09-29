@@ -91,20 +91,20 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T}, Y::Vector{$T})
+            function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
@@ -122,20 +122,20 @@ for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T}, Y::Vector{$T})
+            function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
@@ -153,20 +153,20 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T}, Y::Vector{$T})
+            function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)}, Y::Vector{$($T)})`
-            Implements element-wise **$($name)** over two **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
+            Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T}, Y::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
@@ -188,20 +188,20 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
@@ -226,20 +226,20 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
@@ -257,20 +257,20 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
         addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
         @eval begin
              @doc """
-            `$($f)(X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
-            Implements element-wise **$($name)** over a **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
+            Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{$T}, X::Vector{$T})
+            function ($f!)(out::Array{$T}, X::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
@@ -289,20 +289,20 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
         addfunction(functions, (f!, (real(T),T)), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)})`
-            Calculates the **$($name)** element-wise over a **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)})`
+            Calculates the **$($name)** element-wise over a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 out = Array(real($T), length(X))
                 return $(f!)(out, X)
             end
             @doc """
-            `$($f!)(result::Vector{$($T)}, X::Vector{$($T)})`
-            Calculates the **$($name)** element-wise over a **Vector{$($T)}** and overwrites
-            the result vector with computed value. *Returns:* **Vector{$($T)}** `result`
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
+            Calculates the **$($name)** element-wise over a **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
             """ ->
-            function ($f!)(out::Vector{real($T)}, X::Vector{$T})
+            function ($f!)(out::Array{real($T)}, X::Array{$T})
                 ccall($(string("v", prefix, fvml), librt),  Void,
                       (Cint, Ptr{$T}, Ptr{real($T)}),
                       length(out), X, out)

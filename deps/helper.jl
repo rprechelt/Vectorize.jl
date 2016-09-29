@@ -33,12 +33,12 @@ function benchmarkSingleArgFunction(fname, fnames,
     
     # dictionary to store elpased values
     val = Dict()
-    println("TESTING: $(fname)(Vector{$T})")
+    println("TESTING: $(fname)(Array{$T})")
     
     # Iterate over all functions
     for fstr in fnames
         f = eval(parse(fstr)) # convert string to function
-        X = convert(Vector{T}, randn(N)) # function arguments
+        X = convert(Array{T}, randn(N)) # function arguments
         f(X) # force compilation
         time = 0
         for i in 1:10 # benchmark ten times
@@ -60,11 +60,11 @@ function benchmarkSingleArgFunction(fname, fnames,
     end
 
     # write chosen file into IOStream
-    write(file, "\n$(fname)(X::Vector{$T}) = $(fbest)(X)\n")
+    write(file, "\n$(fname)(X::Array{$T}) = $(fbest)(X)\n")
     # docs = @doc fbest
     # write(file, "\n\"\"\"\n", docs, "\n\"\"\"\n")
-    # write(file, "$(fname)(X::Vector{$T}) = $(fbest)(X)\n")
-    println("BENCHMARK: $(fname)(Vector{$T}) mapped to $(fbest)()\n")
+    # write(file, "$(fname)(X::Array{$T}) = $(fbest)(X)\n")
+    println("BENCHMARK: $(fname)(Array{$T}) mapped to $(fbest)()\n")
 end
 
 
@@ -85,7 +85,7 @@ function benchmarkTwoArgFunction(fname, fnames,
     
     # dictionary of elapsed times for each implementation
     val = Dict()
-    println("TESTING: $(fname)(Vector{$(T[1])}, Vector{$(T[2])})")
+    println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])})")
     
     # Iterate over all functions
     for fstr in fnames
@@ -113,20 +113,20 @@ function benchmarkTwoArgFunction(fname, fnames,
     end
 
     # write result into IOStream
-    write(file, "\n$(fname)(X::Vector{$(T[1])}, Y::Vector{$(T[2])}) = $(fbest)(X, Y)\n")
-    println("BENCHMARK: $(fname)(Vector{$(T[1])}, Vector{$(T[2])}) mapped to $(fbest)()\n")
+    write(file, "\n$(fname)(X::Array{$(T[1])}, Y::Array{$(T[2])}) = $(fbest)(X, Y)\n")
+    println("BENCHMARK: $(fname)(Array{$(T[1])}, Array{$(T[2])}) mapped to $(fbest)()\n")
 end
 
 
 """
 This function selects a single implementation from `fnames` and associates it
-with `fname`. It benchmarks every function in `fnames` against three `Vector{T}`'s
+with `fname`. It benchmarks every function in `fnames` against three `Array{T}`'s
 of length `N` and writes the resulting association into the 
 IOstream `file`. 
 
     fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
-    T: tuple of types of Vector{T} to pass to the function
+    T: tuple of types of Array{T} to pass to the function
     file: the IOStream to write the final string onto
     N: the length of the vector to benchmark over.
 """
@@ -135,14 +135,14 @@ function benchmarkThreeArgFunction(fname, fnames,
     
     # dictionary to store elapsed values
     val = Dict()
-    println("TESTING: $(fname)(Vector{$(T[1])}, Vector{$(T[2])}, Vector{$(T[3])})")
+    println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])}, Array{$(T[3])})")
     
     # Iterate over all functions
     for fstr in fnames
         f = eval(parse(fstr)) # convert string to function
-        X = convert(Vector{T[1]}, randn(N)) # function arguments
-        Y = convert(Vector{T[2]}, randn(N)) # function arguments
-        Z = convert(Vector{T[3]}, randn(N)) # function arguments
+        X = convert(Array{T[1]}, randn(N)) # function arguments
+        Y = convert(Array{T[2]}, randn(N)) # function arguments
+        Z = convert(Array{T[3]}, randn(N)) # function arguments
         f(X, Y, Z) # force compilation
         time = 0
         for i in 1:10 # benchmark 10 times
@@ -164,8 +164,8 @@ function benchmarkThreeArgFunction(fname, fnames,
     end
 
         # write result into IOStream
-    write(file, "\n$(fname)(X::Vector{$(T[1])}, Y::Vector{$(T[2])}, Z::Vector{$(T[3])}) = $(fbest)(X, Y, Z)\n")
-    println("BENCHMARK: $(fname)(Vector{$(T[1])}, Vector{$(T[2])}, Vector{$(T[3])}) mapped to $(fbest)()\n")
+    write(file, "\n$(fname)(X::Array{$(T[1])}, Y::Array{$(T[2])}, Z::Array{$(T[3])}) = $(fbest)(X, Y, Z)\n")
+    println("BENCHMARK: $(fname)(Array{$(T[1])}, Array{$(T[2])}, Array{$(T[3])}) mapped to $(fbest)()\n")
 end
 
 """

@@ -77,11 +77,11 @@ for (f, fname, name) in ((:add, "Add", "addition"),  (:sub, "Subtract", "subtrac
         addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f") 
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($argtype1)}, Y::Vector{$($argtype2)})`
-            Implements element-wise **$($name)** over two **Vector{$($argtype1)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($returntype)}**
+            `$($f)(X::Array{$($argtype1)}, Y::Array{$($argtype2)})`
+            Implements element-wise **$($name)** over two **Array{$($argtype1)}**. Allocates
+            memory to store result. *Returns:* **Array{$($returntype)}**
             """ ->
-            function ($f)(X::Vector{$argtype1}, Y::Vector{$argtype2})
+            function ($f)(X::Array{$argtype1}, Y::Array{$argtype2})
                 len = length(X)
                 out = Array($returntype, len)
                 ccall(($(yepppname, libyeppp)), Cint,
@@ -103,20 +103,20 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)") 
     @eval begin
          @doc """
-        `$($f)(X::Vector{Float64})`
-        Implements element-wise **$($name)** over a **Vector{Float64}**. Allocates
-        memory to store result. *Returns:* **Vector{Float64}**
+        `$($f)(X::Array{Float64})`
+        Implements element-wise **$($name)** over a **Array{Float64}**. Allocates
+        memory to store result. *Returns:* **Array{Float64}**
         """ ->
-        function ($f)(X::Vector{Float64}) # regular syntax
+        function ($f)(X::Array{Float64}) # regular syntax
             out = Array(Float64, length(X))
             return ($f!)(out, X)
         end
         @doc """
-        `$($f!)(result::Vector{Float64}, X::Vector{Float64})`
-        Implements element-wise **$($name)** over a **Vector{Float64}** and overwrites
-        the result vector with computed value. *Returns:* **Vector{Float64}** `result`
+        `$($f!)(result::Array{Float64}, X::Array{Float64})`
+        Implements element-wise **$($name)** over a **Array{Float64}** and overwrites
+        the result vector with computed value. *Returns:* **Array{Float64}** `result`
         """ ->
-        function ($f!)(out::Vector{Float64}, X::Vector{Float64}) # in place syntax
+        function ($f!)(out::Array{Float64}, X::Array{Float64}) # in place syntax
             len = length(X)
             ccall(($(yepppname, libyeppp)), Cint,
                   (Ptr{Float64}, Ptr{Float64},  Clonglong),
@@ -133,11 +133,11 @@ for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
         addfunction(functions, (f, (T,)), "Vectorize.Yeppp.$f")
         @eval begin
             @doc """
-            `$($f)(X::Vector{$($T)})`
-            Computes the **$($name)** of a **Vector{$($T)}**. Allocates
-            memory to store result. *Returns:* **Vector{$($T)}**
+            `$($f)(X::Array{$($T)})`
+            Computes the **$($name)** of a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
             """ ->
-            function ($f)(X::Vector{$T})
+            function ($f)(X::Array{$T})
                 len = length(X)
                 out = Array($T, 1)
                 ccall(($(yepppname, libyeppp)), Cint,
