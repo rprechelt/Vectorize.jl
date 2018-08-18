@@ -58,6 +58,91 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
             end
         end
     end
+    # 2 arg functions
+    for f in (:copysign,)
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Array{$T}, Y::Array{$T})
+                size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
+                out = similar(X)
+                ($f!)(out, X, Y)
+            end
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
+                ccall(($(string("vv",f,suff)),libacc),Cvoid,
+                      (Ptr{$T},Ptr{$T},Ptr{$T},Ptr{Cint}),out,X,Y,Ref{Cint}(length(X)))
+                out
+            end
+        end
+    end
+
+    # for some bizarre reason, vvpow/vvpowf reverse the order of arguments.
+    for f in (:pow,)
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Array{$T}, Y::Array{$T})
+                size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
+                out = similar(X)
+                ($f!)(out, X, Y)
+            end
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
+                ccall(($(string("vv",f,suff)),libacc),Cvoid,
+                      (Ptr{$T},Ptr{$T},Ptr{$T},Ptr{Cint}),out,Y,X,Ref{Cint}(length(X)))
+                out
+            end
+        end
+    end
+
+
+    # renamed 2 arg functions
+    for (f,fa) in ((:rem,:fmod),(:fdiv,:div),(:atan,:atan2))
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Array{$T}, Y::Array{$T})
+                size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
+                out = similar(X)
+                ($f!)(out, X, Y)
+            end
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
+                ccall(($(string("vv",fa,suff)),libacc),Cvoid,
+                      (Ptr{$T},Ptr{$T},Ptr{$T},Ptr{Cint}),out,X,Y,Ref{Cint}(length(X)))
+                out
+            end
+        end
+    end
+
+    # two-arg return
+    for f in (:sincos,)
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Array{$T})
+                out1 = similar(X)
+                out2 = similar(X)
+                ($f!)(out1, out2, X)
+            end
+            function ($f!)(out1::Array{$T}, out2::Array{$T}, X::Array{$T})
+                ccall(($(string("vv",f,suff)),libacc),Cvoid,
+                      (Ptr{$T},Ptr{$T},Ptr{$T},Ptr{Cint}),out1,out2,X,Ref{Cint}(length(X)))
+                out1, out2
+            end
+        end
+    end
+
+    # complex return
+    for (f,fa) in ((:cis,:cosisin),)
+        f! = Symbol("$(f)!")
+        @eval begin
+            function ($f)(X::Array{$T})
+                out = Array{Complex{$T}}(undef, size(X))
+                ($f!)(out, X)
+            end
+            function ($f!)(out::Array{Complex{$T}}, X::Array{$T})
+                ccall(($(string("vv",fa,suff)),libacc),Cvoid,
+                      (Ptr{Complex{$T}},Ptr{$T},Ptr{Cint}),out,X,Ref{Cint}(length(X)))
+                out
+            end
+        end
+    end
+
 end
 
 

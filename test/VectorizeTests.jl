@@ -1,16 +1,7 @@
-using Vectorize
-
-if VERSION >= v"0.5-"
-    using Base.Test
-else
-    using BaseTestNext
-    const Test = BaseTestNext
-end
-
 println("===== Testing Vectorize Benchmarked Functions =====")
 # Length of test array
 N = 1000
-srand(13)
+Random.seed!(13)
 
 # Real Arithmetic
 # for T in [Float32, Float64]
@@ -27,9 +18,9 @@ srand(13)
 #                 if !(isa(err, UndefVarError))
 #                     error("Testing $(fvec) has failed")
 #                 end
-                
+
 #             end
-         
+
 #             @test fbase(X, Y) ≈ fvec(X, Y)
 #             println("Testing $f")
 #         end
@@ -57,7 +48,7 @@ srand(13)
 #         end
 
 #         @testset "Testing $f::$T" for f in [:mulbyconj]
-            
+
 #             try # need to catch functions that aren't available from any framework
 #                 @eval fvec = Vectorize.$f
 #             catch err
@@ -103,7 +94,7 @@ srand(13)
 #         #     @eval fvec = Vectorize.$f
 #         #     @test fb(W) ≈ fvec(W)
 #         # end
-        
+
 #         @testset "Testing $f::$T" for f in [:acos, :asin, :atan]#, :atanh] #, :erfinv]
 #             @eval fb = $f
 #             @eval fvec = Vectorize.$f
