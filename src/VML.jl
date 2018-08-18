@@ -11,13 +11,9 @@
 module VML
 import Vectorize: functions, addfunction
 
-# Cross-version compatibility
-if VERSION < v"0.5.0-dev" # Julia v0.4
-    readstring(cmd) = readall(cmd)
-    OS = OS_NAME
-else
-    OS = Sys.KERNEL
-end
+using Libdl
+
+OS = Sys.KERNEL
 
 # Library dependency for VML
 const global librt = Libdl.find_library(["libmkl_rt"], ["/opt/intel/mkl/lib"])
@@ -116,7 +112,7 @@ end
 
 # Real only returning real - two args
 for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
-    for (f, fvml, name) in [(:hypot, :Hypot, "hypotenuse"), (:atan2, :Atan2, "atan2")]
+    for (f, fvml, name) in [(:hypot, :Hypot, "hypotenuse"), (:atan, :Atan2, "atan2")]
         f! = Symbol("$(f)!")
         addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
         addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
@@ -294,7 +290,7 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             memory to store result. *Returns:* **Array{$($T)}**
             """
             function ($f)(X::Array{$T})
-                out = Array(real($T), length(X))
+                out = Array{real($T)}(undef, length(X))
                 return $(f!)(out, X)
             end
             @doc """
