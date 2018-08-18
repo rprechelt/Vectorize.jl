@@ -19,7 +19,7 @@ const libacc = "/System/Library/Frameworks/Accelerate.framework/Accelerate"
 ## This assumes arguments of the form (output_vector, input_vector, length)
 ##
 const veclibfunctions =
-    ((:ceil, :ceil), (:floor, :floor), (:sqrt, :sqrt), (:invsqrt, :rsqrt), (:rec, :rec),
+    ((:ceil, :ceil), (:floor, :floor), (:sqrt, :sqrt), (:invsqrt, :rsqrt), (:inv, :rec),
      (:exp, :exp), (:exp2, :exp2), (:expm1, :expm1), (:log, :log), (:log1p, :log1p),
      (:log2, :log2), (:log10, :log10), (:sin, :sin), (:sinpi, :sinpi), (:cos, :cos),
      (:cospi, :cospi), (:tan, :tan), (:tanpi, :tanpi), (:asin, :asin), (:acos, :acos),
