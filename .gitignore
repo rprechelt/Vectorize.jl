@@ -4,3 +4,5 @@
 deps/src/*
 deps/downloads/*
 src/Functions.jl
+deps/build.log
+Manifest.toml
