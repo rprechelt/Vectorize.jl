@@ -2,6 +2,7 @@ using Vectorize
 using Test
 using Random
 using Libdl
+using SpecialFunctions
 
 ## Test Apple Accelerate
 @static if Sys.isapple()

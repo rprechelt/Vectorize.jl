@@ -176,7 +176,7 @@ end
 for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml) in [(:sqrt, :Sqrt), (:exp, :Exp),  (:acos, :Acos), (:asin, :Asin),
                       (:acosh, :Acosh), (:asinh, :Asinh), (:log,  :Ln),
-                     (:atan, :Atan), (:cos, :Cos), (:sin, :Sin),
+                     (:atan, :Atan), (:atanh, :Atanh), (:cos, :Cos), (:sin, :Sin),
                       (:tan, :Tan), (:cosh, :Cosh), (:sinh, :Sinh), (:tanh, :Tanh), (:log10, :Log10)]
         f! = Symbol("$(f)!")
         name = string(f)
