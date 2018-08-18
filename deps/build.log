@@ -1,0 +1,480 @@
+TESTING: acosh(Array{Float32})
+BENCHMARK: acosh(Array{Float32}) mapped to Vectorize.Accelerate.acosh()
+
+TESTING: sub!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: sub!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sub!()
+
+TESTING: atanh(Array{Float32})
+BENCHMARK: atanh(Array{Float32}) mapped to Vectorize.Accelerate.atanh()
+
+TESTING: round(Array{Float32})
+BENCHMARK: round(Array{Float32}) mapped to Vectorize.Accelerate.round()
+
+TESTING: sinpi(Array{Float32})
+BENCHMARK: sinpi(Array{Float32}) mapped to Vectorize.Accelerate.sinpi()
+
+TESTING: acos!(Array{Float32}, Array{Float32})
+BENCHMARK: acos!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.acos!()
+
+TESTING: log(Array{Float32})
+BENCHMARK: log(Array{Float32}) mapped to Vectorize.Accelerate.log()
+
+TESTING: log!(Array{Float32}, Array{Float32})
+BENCHMARK: log!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.log!()
+
+TESTING: log2!(Array{Float32}, Array{Float32})
+BENCHMARK: log2!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.log2!()
+
+TESTING: sub(Array{Float64}, Array{Float64})
+BENCHMARK: sub(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sub()
+
+TESTING: expm1(Array{Float64})
+BENCHMARK: expm1(Array{Float64}) mapped to Vectorize.Accelerate.expm1()
+
+TESTING: mul(Array{Float64}, Array{Float64})
+BENCHMARK: mul(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.mul()
+
+TESTING: atan!(Array{Float64}, Array{Float64})
+BENCHMARK: atan!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.atan!()
+
+TESTING: sqrt!(Array{Float64}, Array{Float64})
+BENCHMARK: sqrt!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sqrt!()
+
+TESTING: exp!(Array{Float64}, Array{Float64})
+BENCHMARK: exp!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.exp!()
+
+TESTING: max!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: max!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.max!()
+
+TESTING: log2(Array{Float64})
+BENCHMARK: log2(Array{Float64}) mapped to Vectorize.Accelerate.log2()
+
+TESTING: abs!(Array{Float64}, Array{Float64})
+BENCHMARK: abs!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.abs!()
+
+TESTING: sinpi!(Array{Float32}, Array{Float32})
+BENCHMARK: sinpi!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sinpi!()
+
+TESTING: asin!(Array{Float64}, Array{Float64})
+BENCHMARK: asin!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.asin!()
+
+TESTING: rec(Array{Float64})
+BENCHMARK: rec(Array{Float64}) mapped to Vectorize.Accelerate.rec()
+
+TESTING: sqrt(Array{Float64})
+BENCHMARK: sqrt(Array{Float64}) mapped to Vectorize.Accelerate.sqrt()
+
+TESTING: div(Array{Float64}, Array{Float64})
+BENCHMARK: div(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.div()
+
+TESTING: log2(Array{Float32})
+BENCHMARK: log2(Array{Float32}) mapped to Vectorize.Accelerate.log2()
+
+TESTING: asinh(Array{Float32})
+BENCHMARK: asinh(Array{Float32}) mapped to Vectorize.Accelerate.asinh()
+
+TESTING: tanpi!(Array{Float64}, Array{Float64})
+BENCHMARK: tanpi!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.tanpi!()
+
+TESTING: floor(Array{Float32})
+BENCHMARK: floor(Array{Float32}) mapped to Vectorize.Accelerate.floor()
+
+TESTING: exp2(Array{Float64})
+BENCHMARK: exp2(Array{Float64}) mapped to Vectorize.Accelerate.exp2()
+
+TESTING: expm1(Array{Float32})
+BENCHMARK: expm1(Array{Float32}) mapped to Vectorize.Accelerate.expm1()
+
+TESTING: cosh(Array{Float32})
+BENCHMARK: cosh(Array{Float32}) mapped to Vectorize.Accelerate.cosh()
+
+TESTING: sub(Array{Float32}, Array{Float32})
+BENCHMARK: sub(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sub()
+
+TESTING: asin(Array{Float64})
+BENCHMARK: asin(Array{Float64}) mapped to Vectorize.Accelerate.asin()
+
+TESTING: rec!(Array{Float64}, Array{Float64})
+BENCHMARK: rec!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.rec!()
+
+TESTING: log1p(Array{Float32})
+BENCHMARK: log1p(Array{Float32}) mapped to Vectorize.Accelerate.log1p()
+
+TESTING: floor(Array{Float64})
+BENCHMARK: floor(Array{Float64}) mapped to Vectorize.Accelerate.floor()
+
+TESTING: invsqrt!(Array{Float32}, Array{Float32})
+BENCHMARK: invsqrt!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.invsqrt!()
+
+TESTING: min!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: min!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.min!()
+
+TESTING: min(Array{Float64}, Array{Float64})
+BENCHMARK: min(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.min()
+
+TESTING: div!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: div!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.div!()
+
+TESTING: cos(Array{Float64})
+BENCHMARK: cos(Array{Float64}) mapped to Vectorize.Accelerate.cos()
+
+TESTING: cospi(Array{Float32})
+BENCHMARK: cospi(Array{Float32}) mapped to Vectorize.Accelerate.cospi()
+
+TESTING: round!(Array{Float32}, Array{Float32})
+BENCHMARK: round!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.round!()
+
+TESTING: mean(Array{Float64})
+BENCHMARK: mean(Array{Float64}) mapped to Vectorize.Accelerate.mean()
+
+TESTING: rec!(Array{Float32}, Array{Float32})
+BENCHMARK: rec!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.rec!()
+
+TESTING: sqrt!(Array{Float32}, Array{Float32})
+BENCHMARK: sqrt!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sqrt!()
+
+TESTING: summag(Array{Float32})
+BENCHMARK: summag(Array{Float32}) mapped to Vectorize.Accelerate.summag()
+
+TESTING: add(Array{Float32}, Array{Float32})
+BENCHMARK: add(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.add()
+
+TESTING: sum(Array{Float64})
+BENCHMARK: sum(Array{Float64}) mapped to Vectorize.Accelerate.sum()
+
+TESTING: exp!(Array{Float32}, Array{Float32})
+BENCHMARK: exp!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.exp!()
+
+TESTING: ceil(Array{Float64})
+BENCHMARK: ceil(Array{Float64}) mapped to Vectorize.Accelerate.ceil()
+
+TESTING: ceil!(Array{Float64}, Array{Float64})
+BENCHMARK: ceil!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.ceil!()
+
+TESTING: trunc!(Array{Float64}, Array{Float64})
+BENCHMARK: trunc!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.trunc!()
+
+TESTING: ceil(Array{Float32})
+BENCHMARK: ceil(Array{Float32}) mapped to Vectorize.Accelerate.ceil()
+
+TESTING: asinh!(Array{Float32}, Array{Float32})
+BENCHMARK: asinh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.asinh!()
+
+TESTING: exponent(Array{Float32})
+BENCHMARK: exponent(Array{Float32}) mapped to Vectorize.Accelerate.exponent()
+
+TESTING: cosh!(Array{Float64}, Array{Float64})
+BENCHMARK: cosh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.cosh!()
+
+TESTING: asinh(Array{Float64})
+BENCHMARK: asinh(Array{Float64}) mapped to Vectorize.Accelerate.asinh()
+
+TESTING: abs!(Array{Float32}, Array{Float32})
+BENCHMARK: abs!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.abs!()
+
+TESTING: exponent!(Array{Float32}, Array{Float32})
+BENCHMARK: exponent!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.exponent!()
+
+TESTING: log1p!(Array{Float32}, Array{Float32})
+BENCHMARK: log1p!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.log1p!()
+
+TESTING: acos!(Array{Float64}, Array{Float64})
+BENCHMARK: acos!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.acos!()
+
+TESTING: cospi!(Array{Float32}, Array{Float32})
+BENCHMARK: cospi!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.cospi!()
+
+TESTING: cospi(Array{Float64})
+BENCHMARK: cospi(Array{Float64}) mapped to Vectorize.Accelerate.cospi()
+
+TESTING: add!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: add!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.add!()
+
+TESTING: exp2(Array{Float32})
+BENCHMARK: exp2(Array{Float32}) mapped to Vectorize.Accelerate.exp2()
+
+TESTING: acos(Array{Float64})
+BENCHMARK: acos(Array{Float64}) mapped to Vectorize.Accelerate.acos()
+
+TESTING: asin!(Array{Float32}, Array{Float32})
+BENCHMARK: asin!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.asin!()
+
+TESTING: log10(Array{Float32})
+BENCHMARK: log10(Array{Float32}) mapped to Vectorize.Accelerate.log10()
+
+TESTING: sum(Array{Float32})
+BENCHMARK: sum(Array{Float32}) mapped to Vectorize.Accelerate.sum()
+
+TESTING: minimum(Array{Float32})
+BENCHMARK: minimum(Array{Float32}) mapped to Vectorize.Accelerate.minimum()
+
+TESTING: log10!(Array{Float32}, Array{Float32})
+BENCHMARK: log10!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.log10!()
+
+TESTING: trunc(Array{Float32})
+BENCHMARK: trunc(Array{Float32}) mapped to Vectorize.Accelerate.trunc()
+
+TESTING: log!(Array{Float64}, Array{Float64})
+BENCHMARK: log!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.log!()
+
+TESTING: invsqrt(Array{Float32})
+BENCHMARK: invsqrt(Array{Float32}) mapped to Vectorize.Accelerate.invsqrt()
+
+TESTING: atan(Array{Float64})
+BENCHMARK: atan(Array{Float64}) mapped to Vectorize.Accelerate.atan()
+
+TESTING: sinh!(Array{Float32}, Array{Float32})
+BENCHMARK: sinh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sinh!()
+
+TESTING: sqrt(Array{Float32})
+BENCHMARK: sqrt(Array{Float32}) mapped to Vectorize.Accelerate.sqrt()
+
+TESTING: tanpi!(Array{Float32}, Array{Float32})
+BENCHMARK: tanpi!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.tanpi!()
+
+TESTING: abs(Array{Float64})
+BENCHMARK: abs(Array{Float64}) mapped to Vectorize.Accelerate.abs()
+
+TESTING: atan!(Array{Float32}, Array{Float32})
+BENCHMARK: atan!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.atan!()
+
+TESTING: invsqrt!(Array{Float64}, Array{Float64})
+BENCHMARK: invsqrt!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.invsqrt!()
+
+TESTING: log10!(Array{Float64}, Array{Float64})
+BENCHMARK: log10!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.log10!()
+
+TESTING: atanh!(Array{Float64}, Array{Float64})
+BENCHMARK: atanh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.atanh!()
+
+TESTING: atanh(Array{Float64})
+BENCHMARK: atanh(Array{Float64}) mapped to Vectorize.Accelerate.atanh()
+
+TESTING: sinpi(Array{Float64})
+BENCHMARK: sinpi(Array{Float64}) mapped to Vectorize.Accelerate.sinpi()
+
+TESTING: cospi!(Array{Float64}, Array{Float64})
+BENCHMARK: cospi!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.cospi!()
+
+TESTING: tan!(Array{Float64}, Array{Float64})
+BENCHMARK: tan!(Array{Float64}, Array{Float64}) mapped to Vectorize.Yeppp.tan!()
+
+TESTING: rec(Array{Float32})
+BENCHMARK: rec(Array{Float32}) mapped to Vectorize.Accelerate.rec()
+
+TESTING: log(Array{Float64})
+BENCHMARK: log(Array{Float64}) mapped to Vectorize.Accelerate.log()
+
+TESTING: sin(Array{Float32})
+BENCHMARK: sin(Array{Float32}) mapped to Vectorize.Accelerate.sin()
+
+TESTING: asin(Array{Float32})
+BENCHMARK: asin(Array{Float32}) mapped to Vectorize.Accelerate.asin()
+
+TESTING: div!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: div!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.div!()
+
+TESTING: exp2!(Array{Float32}, Array{Float32})
+BENCHMARK: exp2!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.exp2!()
+
+TESTING: round!(Array{Float64}, Array{Float64})
+BENCHMARK: round!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.round!()
+
+TESTING: tanh!(Array{Float64}, Array{Float64})
+BENCHMARK: tanh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.tanh!()
+
+TESTING: max(Array{Float32}, Array{Float32})
+BENCHMARK: max(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.max()
+
+TESTING: mul!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: mul!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.mul!()
+
+TESTING: sub!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: sub!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sub!()
+
+TESTING: tan!(Array{Float32}, Array{Float32})
+BENCHMARK: tan!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.tan!()
+
+TESTING: sin!(Array{Float32}, Array{Float32})
+BENCHMARK: sin!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.sin!()
+
+TESTING: sumsqr(Array{Float32})
+BENCHMARK: sumsqr(Array{Float32}) mapped to Vectorize.Accelerate.sumsqr()
+
+TESTING: asinh!(Array{Float64}, Array{Float64})
+BENCHMARK: asinh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.asinh!()
+
+TESTING: atanh!(Array{Float32}, Array{Float32})
+BENCHMARK: atanh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.atanh!()
+
+TESTING: ceil!(Array{Float32}, Array{Float32})
+BENCHMARK: ceil!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.ceil!()
+
+TESTING: cos!(Array{Float32}, Array{Float32})
+BENCHMARK: cos!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.cos!()
+
+TESTING: mul(Array{Float32}, Array{Float32})
+BENCHMARK: mul(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.mul()
+
+TESTING: expm1!(Array{Float32}, Array{Float32})
+BENCHMARK: expm1!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.expm1!()
+
+TESTING: add(Array{Float64}, Array{Float64})
+BENCHMARK: add(Array{Float64}, Array{Float64}) mapped to Vectorize.Yeppp.add()
+
+TESTING: summag(Array{Float64})
+BENCHMARK: summag(Array{Float64}) mapped to Vectorize.Accelerate.summag()
+
+TESTING: sinpi!(Array{Float64}, Array{Float64})
+BENCHMARK: sinpi!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sinpi!()
+
+TESTING: abs(Array{Float32})
+BENCHMARK: abs(Array{Float32}) mapped to Vectorize.Accelerate.abs()
+
+TESTING: log1p!(Array{Float64}, Array{Float64})
+BENCHMARK: log1p!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.log1p!()
+
+TESTING: cos(Array{Float32})
+BENCHMARK: cos(Array{Float32}) mapped to Vectorize.Accelerate.cos()
+
+TESTING: mean(Array{Float32})
+BENCHMARK: mean(Array{Float32}) mapped to Vectorize.Accelerate.mean()
+
+TESTING: cosh!(Array{Float32}, Array{Float32})
+BENCHMARK: cosh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.cosh!()
+
+TESTING: sin(Array{Float64})
+BENCHMARK: sin(Array{Float64}) mapped to Vectorize.Accelerate.sin()
+
+TESTING: tan(Array{Float64})
+BENCHMARK: tan(Array{Float64}) mapped to Vectorize.Yeppp.tan()
+
+TESTING: max!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: max!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.max!()
+
+TESTING: trunc(Array{Float64})
+BENCHMARK: trunc(Array{Float64}) mapped to Vectorize.Accelerate.trunc()
+
+TESTING: tanh(Array{Float32})
+BENCHMARK: tanh(Array{Float32}) mapped to Vectorize.Accelerate.tanh()
+
+TESTING: tanpi(Array{Float32})
+BENCHMARK: tanpi(Array{Float32}) mapped to Vectorize.Accelerate.tanpi()
+
+TESTING: div(Array{Float32}, Array{Float32})
+BENCHMARK: div(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.div()
+
+TESTING: sumsqr(Array{Float64})
+BENCHMARK: sumsqr(Array{Float64}) mapped to Vectorize.Accelerate.sumsqr()
+
+TESTING: minimum(Array{Float64})
+BENCHMARK: minimum(Array{Float64}) mapped to Vectorize.Accelerate.minimum()
+
+TESTING: cosh(Array{Float64})
+BENCHMARK: cosh(Array{Float64}) mapped to Vectorize.Accelerate.cosh()
+
+TESTING: max(Array{Float64}, Array{Float64})
+BENCHMARK: max(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.max()
+
+TESTING: sinh(Array{Float32})
+BENCHMARK: sinh(Array{Float32}) mapped to Vectorize.Accelerate.sinh()
+
+TESTING: maximum(Array{Float64})
+BENCHMARK: maximum(Array{Float64}) mapped to Vectorize.Accelerate.maximum()
+
+TESTING: exponent!(Array{Float64}, Array{Float64})
+BENCHMARK: exponent!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.exponent!()
+
+TESTING: exp2!(Array{Float64}, Array{Float64})
+BENCHMARK: exp2!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.exp2!()
+
+TESTING: invsqrt(Array{Float64})
+BENCHMARK: invsqrt(Array{Float64}) mapped to Vectorize.Accelerate.invsqrt()
+
+TESTING: acos(Array{Float32})
+BENCHMARK: acos(Array{Float32}) mapped to Vectorize.Accelerate.acos()
+
+TESTING: mul!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: mul!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.mul!()
+
+TESTING: exp(Array{Float32})
+BENCHMARK: exp(Array{Float32}) mapped to Vectorize.Accelerate.exp()
+
+TESTING: add!(Array{Float64}, Array{Float64}, Array{Float64})
+BENCHMARK: add!(Array{Float64}, Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.add!()
+
+TESTING: log1p(Array{Float64})
+BENCHMARK: log1p(Array{Float64}) mapped to Vectorize.Accelerate.log1p()
+
+TESTING: acosh!(Array{Float64}, Array{Float64})
+BENCHMARK: acosh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.acosh!()
+
+TESTING: log2!(Array{Float64}, Array{Float64})
+BENCHMARK: log2!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.log2!()
+
+TESTING: sinh(Array{Float64})
+BENCHMARK: sinh(Array{Float64}) mapped to Vectorize.Accelerate.sinh()
+
+TESTING: acosh(Array{Float64})
+BENCHMARK: acosh(Array{Float64}) mapped to Vectorize.Accelerate.acosh()
+
+TESTING: sin!(Array{Float64}, Array{Float64})
+BENCHMARK: sin!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sin!()
+
+TESTING: exp(Array{Float64})
+BENCHMARK: exp(Array{Float64}) mapped to Vectorize.Accelerate.exp()
+
+TESTING: exponent(Array{Float64})
+BENCHMARK: exponent(Array{Float64}) mapped to Vectorize.Accelerate.exponent()
+
+TESTING: maximum(Array{Float32})
+BENCHMARK: maximum(Array{Float32}) mapped to Vectorize.Accelerate.maximum()
+
+TESTING: min!(Array{Float32}, Array{Float32}, Array{Float32})
+BENCHMARK: min!(Array{Float32}, Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.min!()
+
+TESTING: tanh!(Array{Float32}, Array{Float32})
+BENCHMARK: tanh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.tanh!()
+
+TESTING: log10(Array{Float64})
+BENCHMARK: log10(Array{Float64}) mapped to Vectorize.Accelerate.log10()
+
+TESTING: floor!(Array{Float64}, Array{Float64})
+BENCHMARK: floor!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.floor!()
+
+TESTING: expm1!(Array{Float64}, Array{Float64})
+BENCHMARK: expm1!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.expm1!()
+
+TESTING: tanh(Array{Float64})
+BENCHMARK: tanh(Array{Float64}) mapped to Vectorize.Accelerate.tanh()
+
+TESTING: acosh!(Array{Float32}, Array{Float32})
+BENCHMARK: acosh!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.acosh!()
+
+TESTING: round(Array{Float64})
+BENCHMARK: round(Array{Float64}) mapped to Vectorize.Accelerate.round()
+
+TESTING: cos!(Array{Float64}, Array{Float64})
+BENCHMARK: cos!(Array{Float64}, Array{Float64}) mapped to Vectorize.Yeppp.cos!()
+
+TESTING: min(Array{Float32}, Array{Float32})
+BENCHMARK: min(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.min()
+
+TESTING: tanpi(Array{Float64})
+BENCHMARK: tanpi(Array{Float64}) mapped to Vectorize.Accelerate.tanpi()
+
+TESTING: atan(Array{Float32})
+BENCHMARK: atan(Array{Float32}) mapped to Vectorize.Accelerate.atan()
+
+TESTING: floor!(Array{Float32}, Array{Float32})
+BENCHMARK: floor!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.floor!()
+
+TESTING: tan(Array{Float32})
+BENCHMARK: tan(Array{Float32}) mapped to Vectorize.Accelerate.tan()
+
+TESTING: sinh!(Array{Float64}, Array{Float64})
+BENCHMARK: sinh!(Array{Float64}, Array{Float64}) mapped to Vectorize.Accelerate.sinh!()
+
+TESTING: trunc!(Array{Float32}, Array{Float32})
+BENCHMARK: trunc!(Array{Float32}, Array{Float32}) mapped to Vectorize.Accelerate.trunc!()
+

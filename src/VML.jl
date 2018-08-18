@@ -47,11 +47,11 @@ const VML_FTZDAZ_OFF       =  0x00140000     # accurate denormal value processin
 
 
 """
-This function sets the default values for the VME library on import, 
-allowing for the precompilation of the rest of the package. 
+This function sets the default values for the VME library on import,
+allowing for the precompilation of the rest of the package.
 """
 function __init__()
-    
+
     # Open librt
     Libdl.dlopen(librt)
 
@@ -62,7 +62,7 @@ end
 
 """
 Sets accuracy, error, and FTZDAZ modes for all VML functions. This is automatically
-called in init() but can also be called to change the modes during runtime. 
+called in init() but can also be called to change the modes during runtime.
 """
 function setmode(mode)
     oldmode = ccall(("vmlSetMode", librt),  Cuint,
@@ -73,7 +73,7 @@ end
 
 """
 Returns the accuracy, error, and FTZDAZ modes for all VML functions". This is automatically
-called in init() but can also be called to change the modes during runtime". 
+called in init() but can also be called to change the modes during runtime".
 """
 function getmode()
     status = ccall(("vmlGetMode", librt),  Cuint,
@@ -94,7 +94,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
@@ -103,9 +103,9 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
             `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
                 return out
@@ -125,7 +125,7 @@ for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
@@ -134,9 +134,9 @@ for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
             `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
                 return out
@@ -156,7 +156,7 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T}, Y::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X, Y)
@@ -165,9 +165,9 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::Array{$($T)})`
             Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T}, Y::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T},  Ptr{$T}),
                       length(out), X, Y,  out)
                 return out
@@ -191,7 +191,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
             `$($f)(X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
@@ -200,9 +200,9 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
             `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
                 return out
@@ -215,7 +215,7 @@ end
 for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
     for (f, fvml) in [(:inv, :Inv), (:invsqrt, :InvSqrt),  (:cbrt,  :Cbrt),
                       (:invcbrt, :InvCbrt), (:pow2o3, :Pow2o3), (:pow3o2, :Pow3o2),
-                      (:erf, :Erf),  (:ceil, :Ceil), 
+                      (:erf, :Erf),  (:ceil, :Ceil),
                       (:erfc, :Erfc), (:cdfnorm, :CdfNorm),  (:erfinv, :ErfInv),
                       (:erfcinv,  :ErfcInv),  (:cdfnorminv, :CdfNormInv), (:lgamma, :LGamma),
                       (:gamma, :TGamma), (:floor, :Floor), (:trunc, :Trunc),
@@ -229,7 +229,7 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
             `$($f)(X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
@@ -238,9 +238,9 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
             `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
                 return out
@@ -260,7 +260,7 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f)(X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T})
                 out = similar(X)
                 return $(f!)(out, X)
@@ -269,9 +269,9 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
             Implements element-wise **$($name)** over a **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{$T}, X::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{$T}),
                       length(out), X, out)
                 return out
@@ -292,7 +292,7 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f)(X::Array{$($T)})`
             Calculates the **$($name)** element-wise over a **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T})
                 out = Array(real($T), length(X))
                 return $(f!)(out, X)
@@ -301,9 +301,9 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
             `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
             Calculates the **$($name)** element-wise over a **Array{$($T)}** and overwrites
             the result vector with computed value. *Returns:* **Array{$($T)}** `result`
-            """ ->
+            """
             function ($f!)(out::Array{real($T)}, X::Array{$T})
-                ccall($(string("v", prefix, fvml), librt),  Void,
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
                       (Cint, Ptr{$T}, Ptr{real($T)}),
                       length(out), X, out)
                 return out

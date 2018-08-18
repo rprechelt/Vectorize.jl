@@ -1,26 +1,8 @@
-# Cross-version compatibility
-if VERSION < v"0.5.0-dev" # Julia v0.4
-    readstring(cmd) = readall(cmd)
-end
-
-"""
-This function handles automatic conversion of OS X/Linux directories
-by converting / into \ on Windows platfors. 
-"""
-@inline function parsedir(dirname)
-    @static if is_windows()
-        return replace(dirname, "/", "\\")
-    else
-        return dirname
-    end
-end
-
-
 """
 This function selects a single implementation from `fnames` and associates it
 with `fname`. It benchmarks every function in `fnames` against the single
-type `Vector{T}` of length `N` and writes the resulting association into the 
-IOstream `file`.  
+type `Vector{T}` of length `N` and writes the resulting association into the
+IOstream `file`.
 
     fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
@@ -30,15 +12,15 @@ IOstream `file`.
 """
 function benchmarkSingleArgFunction(fname, fnames,
                                     T::DataType, file::IOStream, N::Integer)
-    
+
     # dictionary to store elpased values
     val = Dict()
     println("TESTING: $(fname)(Array{$T})")
-    
+
     # Iterate over all functions
     for fstr in fnames
-        f = eval(parse(fstr)) # convert string to function
-        X = convert(Array{T}, randn(N)) # function arguments
+        f = eval(Meta.parse(fstr)) # convert string to function
+        X = randn(T, N) # function arguments
         f(X) # force compilation
         time = 0
         for i in 1:10 # benchmark ten times
@@ -71,8 +53,8 @@ end
 """
 This function selects a single implementation from `fnames` and associates it
 with `fname`. It benchmarks every function in `fnames` against two `Vector{T}`'s
-of length `N` and writes the resulting association into the 
-IOstream `file`. 
+of length `N` and writes the resulting association into the
+IOstream `file`.
 
     fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
@@ -82,16 +64,16 @@ IOstream `file`.
 """
 function benchmarkTwoArgFunction(fname, fnames,
                                  T::Tuple{DataType, DataType}, file::IOStream, N::Integer)
-    
+
     # dictionary of elapsed times for each implementation
     val = Dict()
     println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])})")
-    
+
     # Iterate over all functions
     for fstr in fnames
-        f = eval(parse(fstr)) # convert string to function
-        X = convert(Vector{T[1]}, randn(N)) # function arguments
-        Y = convert(Vector{T[2]}, randn(N)) # function arguments
+        f = eval(Meta.parse(fstr)) # convert string to function
+        X = randn(T[1], N) # function arguments
+        Y = randn(T[2], N) # function arguments
         f(X, Y) # force compilation
         time = 0
         for i in 1:10 # benchmark ten times
@@ -121,8 +103,8 @@ end
 """
 This function selects a single implementation from `fnames` and associates it
 with `fname`. It benchmarks every function in `fnames` against three `Array{T}`'s
-of length `N` and writes the resulting association into the 
-IOstream `file`. 
+of length `N` and writes the resulting association into the
+IOstream `file`.
 
     fname: name to be associated with Vectorize.(fname)
     fnames: a list of strings "Vectorize.VML.sin" to be benchmarked
@@ -132,17 +114,17 @@ IOstream `file`.
 """
 function benchmarkThreeArgFunction(fname, fnames,
                                    T::Tuple{DataType, DataType, DataType}, file::IOStream, N::Integer)
-    
+
     # dictionary to store elapsed values
     val = Dict()
     println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])}, Array{$(T[3])})")
-    
+
     # Iterate over all functions
     for fstr in fnames
-        f = eval(parse(fstr)) # convert string to function
-        X = convert(Array{T[1]}, randn(N)) # function arguments
-        Y = convert(Array{T[2]}, randn(N)) # function arguments
-        Z = convert(Array{T[3]}, randn(N)) # function arguments
+        f = eval(Meta.parse(fstr)) # convert string to function
+        X = randn(T[1], N) # function arguments
+        Y = randn(T[2], N) # function arguments
+        Z = randn(T[3], N) # function arguments
         f(X, Y, Z) # force compilation
         time = 0
         for i in 1:10 # benchmark 10 times
