@@ -3,6 +3,7 @@ using Test
 using Random
 using Libdl
 using SpecialFunctions
+using LinearAlgebra
 
 ## Test Apple Accelerate
 @static if Sys.isapple()
