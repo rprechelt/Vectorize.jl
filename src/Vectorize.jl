@@ -97,25 +97,28 @@ end
 # replacebase macro
 """
 Replace all broadcasted base functions with benchmarked vectorized equivalents.
+Alternatively, if the user may pass the functions to overload instead.
 """
-macro replacebase()
+macro replacebase(fs...)
     b = Expr(:block)
     for ((fvec, args), vectorized_f) in functions
         m, f = get_corresponding_f(fvec)
-        if m == :Base
-            if ismutating(fvec)
-                Tdest = first(args)
-                Targs = makeargs(args[2:end])
-                e = quote
-                    (Base.copyto!)(dest::Array{$Tdest, N}, bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(dest, bc.args...)
+        if isempty(fs) || f in fs
+            if m == :Base
+                if ismutating(fvec)
+                    Tdest = first(args)
+                    Targs = makeargs(args[2:end])
+                    e = quote
+                        (Base.copyto!)(dest::Array{$Tdest, N}, bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(dest, bc.args...)
+                    end
+                else
+                    Targs = makeargs(args)
+                    e = quote
+                        (Base.copy)(bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(bc.args...)
+                    end
                 end
-            else
-                Targs = makeargs(args)
-                e = quote
-                    (Base.copy)(bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(bc.args...)
-                end
+                push!(b.args, e)
             end
-            push!(b.args, e)
         end
     end
     b
