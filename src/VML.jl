@@ -308,4 +308,36 @@ for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     end
 end
 
+# Operations on real returning complex - one arg
+# note that input type is real, although prefix is "complex"
+for (T, prefix) in [(Float32, "c"),  (Float64, "z")]
+    for (f, fvml, name) in [(:cis, :CIS, "cosine-imaginary-sin"),]
+        f! = Symbol("$(f)!")
+        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (complex(T),T)), "Vectorize.VML.$(f!)")
+        @eval begin
+            @doc """
+            `$($f)(X::Array{$($T)})`
+            Calculates the **$($name)** element-wise over a **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
+            """
+            function ($f)(X::Array{$T})
+                out = Array{Complex{$T}}(undef, length(X))
+                return $(f!)(out, X)
+            end
+            @doc """
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)})`
+            Calculates the **$($name)** element-wise over a **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
+            """
+            function ($f!)(out::Array{Complex{$T}}, X::Array{$T})
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
+                      (Cint, Ptr{$T}, Ptr{Complex{$T}}),
+                      length(out), X, out)
+                return out
+            end
+        end
+    end
+end
+
 end # End Module
