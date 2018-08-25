@@ -164,10 +164,12 @@ end
 function makeargs(Targs)
     arg_str = "Tuple{"
     for T in Targs
-        arg_str *= "Array{$T, N}, "
+        arg_str *= "$T, "
     end
     arg_str = arg_str[1:end-2]
     arg_str *= "}"
+    arg_str = replace(arg_str, " where N" => "")
+
     return Meta.parse(arg_str)
 end
 

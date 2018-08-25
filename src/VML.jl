@@ -83,8 +83,8 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
     for (f, fvml, name) in [(:add, :Add, "addition"), (:mul, :Mul, "multiplcation"),
                       (:sub, :Sub, "subtraction"), (:div, :Div, "division"), (:pow, :Pow, "power")]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
@@ -115,8 +115,8 @@ for (T, prefix) in [(Float32, "s"),  (Float64, "d")]
     for (f, fvml, name) in [(:hypot, :Hypot, "hypotenuse"), (:atan, :Atan2, "atan2"),
                             (:max, :Fmax, "max"), (:min, :Fmin, "min")]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
@@ -147,8 +147,8 @@ end
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml, name) in [(:dot, :MulByConj, "multiply-by-conjugate")]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)}, Y::Array{$($T)})`
@@ -183,8 +183,8 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  
                       (:log10, :Log10)]
         f! = Symbol("$(f)!")
         name = string(f)
-        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)})`
@@ -225,8 +225,8 @@ for (T, prefix) in [(Float32,  "s"), (Float64, "d")]
                       (:cospi, :Cospi), (:sinpi, :Sinpi)]
         f! = Symbol("$(f)!")
         name = string(f)
-        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)})`
@@ -256,8 +256,8 @@ end
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml, name) in [(:conj,  :Conj, "conjugation")]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (T,T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
              @doc """
             `$($f)(X::Array{$($T)})`
@@ -288,8 +288,8 @@ end
 for (T, prefix) in [(Complex{Float32}, "c"),  (Complex{Float64}, "z")]
     for (f, fvml, name) in [(:abs, :Abs, "absolute-value"),  (:angle,  :Arg, "complex-argument") ]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (real(T),T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{real(T)},Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)})`
@@ -320,8 +320,8 @@ end
 for (T, prefix) in [(Float32, "c"),  (Float64, "z")]
     for (f, fvml, name) in [(:cis, :CIS, "cosine-imaginary-sin"),]
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.VML.$f")
-        addfunction(functions, (f!, (complex(T),T)), "Vectorize.VML.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{complex(T)},Array{T})), "Vectorize.VML.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)})`
@@ -346,5 +346,37 @@ for (T, prefix) in [(Float32, "c"),  (Float64, "z")]
         end
     end
 end
+
+# Basic operations on two args, with one arg being scalar
+for (T, prefix) in [(Float32,  "s"), (Float64, "d"),  (Complex{Float32}, "c"),  (Complex{Float64}, "z")]
+    for (f, fvml, name) in ((:pow, :Powx, "scalar power"),)
+        f! = Symbol("$(f)!")
+        addfunction(functions, (f, (Array{T}, T)), "Vectorize.VML.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, T)), "Vectorize.VML.$(f!)")
+        @eval begin
+            @doc """
+            `$($f)(X::Array{$($T)}, Y::$($T))`
+            Implements element-wise **$($name)** over two **Array{$($T)}**. Allocates
+            memory to store result. *Returns:* **Array{$($T)}**
+            """
+            function ($f)(X::Array{$T}, Y::$T)
+                out = similar(X)
+                return $(f!)(out, X, Y)
+            end
+            @doc """
+            `$($f!)(result::Array{$($T)}, X::Array{$($T)}, Y::$($T))`
+            Implements element-wise **$($name)** over two **Array{$($T)}** and overwrites
+            the result vector with computed value. *Returns:* **Array{$($T)}** `result`
+            """
+            function ($f!)(out::Array{$T}, X::Array{$T}, Y::$T)
+                ccall($(string("v", prefix, fvml), librt),  Cvoid,
+                      (Cint, Ptr{$T}, $T, Ptr{$T}),
+                      length(out), X, Y, out)
+                return out
+            end
+        end
+    end
+end
+
 
 end # End Module

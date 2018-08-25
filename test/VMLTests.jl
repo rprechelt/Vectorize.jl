@@ -47,6 +47,19 @@ for T in [Complex{Float32}, Complex{Float64}]
     end
 end
 
+# Scalar Power
+for T in [Float32, Float64, Complex{Float32}, Complex{Float64}]
+    @testset "VML: Complex Arithmetic::$T" begin
+        X = rand(T, N)
+        a = rand(T)
+        @testset "Testing $f::$T" for (f, fbs) in ((:pow, ^),)
+            @eval fbase = $fbs
+            @eval fvml = Vectorize.VML.$f
+            @test fbase.(X, a) ≈ fvml(X, a)
+        end
+    end
+end
+
 # Real Vector Math
 for T in [Float32, Float64]
     @testset "VML: Real Vector Math::$T" begin
