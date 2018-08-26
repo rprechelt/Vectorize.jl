@@ -146,14 +146,12 @@ function get_corresponding_f(fvec)
     m = :Base
     if fstr in ("cdfnorminv", "erf", "erfc", "erfi", "erfinv", "erfcinv", "cdfnorm")
         m = :SpecialFunctions
-    elseif fstr in ("invcbrt", )
-        m = :DSP
     elseif fstr in ("mean", )
         m = :Statistics
     elseif fstr in ("dot", )
         m = :LinearAlgebra
     elseif fstr in ("pow3o2", "frac", "mulbyconj", "tanpi", "fdiv", "invsqrt",
-                    "sqr", "pow2o3", "summag", "sumsqr", )
+                    "sqr", "pow2o3", "summag", "sumsqr", "invcbrt")
         m = :None
     end
 
