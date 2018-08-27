@@ -10,12 +10,10 @@
 module Yeppp
 import Vectorize: functions, addfunction
 
+using Libdl
+
 # Cross-version compatibility
-if VERSION < v"0.5.0-dev" # Julia v0.4
-    OS = OS_NAME
-else
-    OS = Sys.KERNEL
-end
+OS = Sys.KERNEL
 
 # Attempt to locate Yeppp library before we proceed with compiling file
 libyeppp_ = Libdl.find_library(["libyeppp"])
@@ -34,20 +32,20 @@ else # using Vectorize.jl provided yppp
 end
 
 """
-`__init__()` -> Void
+`__init__()` Cvoid
 
 This function initializes the Yeppp library whenever the module is imported.
 This allows us to precompile the rest of the module without asking the user
-to explictly initialize Yeppp! on load. 
+to explictly initialize Yeppp! on load.
 """
 function __init__()
     # Yeppp Initialization
     if isfile(libyeppp)
-        const status = ccall(("yepLibrary_Init", libyeppp), Cint,
-                             (), )
+        status = ccall(("yepLibrary_Init", libyeppp), Cint,
+                        (), )
         status != 0 && error("Error initializing Yeppp library (error: ", status, ")")
     end
-    
+
     return true
 end
 
@@ -74,16 +72,16 @@ for (f, fname, name) in ((:add, "Add", "addition"),  (:sub, "Subtract", "subtrac
         # generate Yeppp function name
         yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2],
                            "_", identifier[returntype])
-        addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f") 
+        addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f")
         @eval begin
             @doc """
             `$($f)(X::Array{$($argtype1)}, Y::Array{$($argtype2)})`
             Implements element-wise **$($name)** over two **Array{$($argtype1)}**. Allocates
             memory to store result. *Returns:* **Array{$($returntype)}**
-            """ ->
+            """
             function ($f)(X::Array{$argtype1}, Y::Array{$argtype2})
                 len = length(X)
-                out = Array($returntype, len)
+                out = Array{$returntype}(undef, len)
                 ccall(($(yepppname, libyeppp)), Cint,
                           (Ptr{$argtype1}, Ptr{$argtype2}, Ptr{$returntype},  Clonglong),
                           X, Y, out, len)
@@ -99,23 +97,23 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     name = string(f)
     f! = Symbol("$(f)!")
     # register functions for build
-    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f") 
-    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)") 
+    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f")
+    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)")
     @eval begin
          @doc """
         `$($f)(X::Array{Float64})`
         Implements element-wise **$($name)** over a **Array{Float64}**. Allocates
         memory to store result. *Returns:* **Array{Float64}**
-        """ ->
+        """
         function ($f)(X::Array{Float64}) # regular syntax
-            out = Array(Float64, length(X))
+            out = Array{Float64}(undef, length(X))
             return ($f!)(out, X)
         end
         @doc """
         `$($f!)(result::Array{Float64}, X::Array{Float64})`
         Implements element-wise **$($name)** over a **Array{Float64}** and overwrites
         the result vector with computed value. *Returns:* **Array{Float64}** `result`
-        """ ->
+        """
         function ($f!)(out::Array{Float64}, X::Array{Float64}) # in place syntax
             len = length(X)
             ccall(($(yepppname, libyeppp)), Cint,
@@ -136,10 +134,10 @@ for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
             `$($f)(X::Array{$($T)})`
             Computes the **$($name)** of a **Array{$($T)}**. Allocates
             memory to store result. *Returns:* **Array{$($T)}**
-            """ ->
+            """
             function ($f)(X::Array{$T})
                 len = length(X)
-                out = Array($T, 1)
+                out = Array{$T}(undef, 1)
                 ccall(($(yepppname, libyeppp)), Cint,
                       (Ptr{$T}, Ptr{$T},  Clonglong),
                       X, out, len)

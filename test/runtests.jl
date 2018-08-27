@@ -1,13 +1,11 @@
 using Vectorize
-if VERSION >= v"0.5-"
-    using Base.Test
-else
-    using BaseTestNext
-    const Test = BaseTestNext
-end
+using Test
+using Random
+using Libdl
+using SpecialFunctions
 
 ## Test Apple Accelerate
-@static if is_apple()
+@static if Sys.isapple()
     include("AccelerateTests.jl")
 else
     println("Accelerate not present. Aborting Accelerate tests")
@@ -23,4 +21,3 @@ end
 
 ## Running tests over benchmarked Vectorized functions
 include("VectorizeTests.jl")
-

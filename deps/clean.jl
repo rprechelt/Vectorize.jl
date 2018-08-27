@@ -13,7 +13,7 @@ currdir = @__FILE__
 pkgdir = currdir[1:end-13]
 
 # Clean up directory status
-@static if is_windows()
+@static if Sys.iswindows()
     run(`cmd /C del $(pkgdir)src\\Functions.jl`)
     run(`cmd /C copy NUL Functions.jl`)
     run(`cmd /C move Functions.jl $(pkgdir)src`)

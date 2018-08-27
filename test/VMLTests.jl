@@ -1,17 +1,9 @@
-using Vectorize
 VML = Vectorize.VML
-
-if VERSION >= v"0.5-"
-    using Base.Test
-else
-    using BaseTestNext
-    const Test = BaseTestNext
-end
 
 println("===== Testing Intel's VML =====")
 # Length of test array
 N = 1000
-srand(13)
+Random.seed!(13)
 
 # Test basic utility functionality
 @testset "VML: Basic Functionality" begin
@@ -24,13 +16,13 @@ end
 # Real Arithmetic
 for T in [Float32, Float64]
     @testset "VML: Basic Arithmetic::$T" begin
-        X = convert(Vector{T}, abs(randn(N)))
-        Y = convert(Vector{T}, abs(randn(N)))
-        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
-                                                  (:hypot, :hypot), (:atan2, :atan2), (:pow, .^)]
-            @eval fbase = $fb
+        X = convert(Vector{T}, abs.(randn(N)))
+        Y = convert(Vector{T}, abs.(randn(N)))
+        @testset "Testing $f::$T" for (f, fbs) in [(:add, +), (:sub, -), (:div, /), (:mul, *),
+                                                  (:hypot, :hypot), (:atan, :atan), (:pow, ^)]
+            @eval fbase = $fbs
             @eval fvml = Vectorize.VML.$f
-            @test fbase(X, Y) ≈ fvml(X, Y)
+            @test fbase.(X, Y) ≈ fvml(X, Y)
         end
     end
 end
@@ -38,18 +30,18 @@ end
 # Complex Arithmetic
 for T in [Complex{Float32}, Complex{Float64}]
     @testset "VML: Complex Arithmetic::$T" begin
-        X = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
-        Y = convert(Vector{T}, randn(N)) + convert(Vector{T}, randn(N))*im
-        @testset "Testing $f::$T" for (f, fb) in [(:add, .+), (:sub, .-), (:div, ./), (:mul, .*),
-                                                  (:pow, .^)]
-            @eval fbase = $fb
+        X = convert(Vector{T}, randn(N)) .+ convert(Vector{T}, randn(N))*im
+        Y = convert(Vector{T}, randn(N)) .+ convert(Vector{T}, randn(N))*im
+        @testset "Testing $f::$T" for (f, fbs) in [(:add, +), (:sub, -), (:div, /), (:mul, *),
+                                                  (:pow, ^)]
+            @eval fbase = $fbs
             @eval fvml = Vectorize.VML.$f
-            @test fbase(X, Y) ≈ fvml(X, Y)
+            @test fbase.(X, Y) ≈ fvml(X, Y)
         end
 
         @testset "Testing $f::$T" for f in [:mulbyconj]
             @eval fvml = Vectorize.VML.$f
-            @test X .* conj(Y) ≈ fvml(X, Y)
+            @test X .* conj.(Y) ≈ fvml(X, Y)
         end
     end
 end
@@ -58,33 +50,33 @@ end
 for T in [Float32, Float64]
     @testset "VML: Real Vector Math::$T" begin
         X = convert(Vector{T}, randn(N)) # unrestricted
-        Y = convert(Vector{T}, abs(randn(N))) .+ 1 # greater than 1
-        Z = clamp(convert(Vector{T}, randn(N)), -1,  1) # [-1, 1]
-        W = clamp(convert(Vector{T}, randn(N)), 0,  2) # [0, 2]
+        Y = convert(Vector{T}, abs.(randn(N))) .+ 1 # greater than 1
+        Z = clamp.(convert(Vector{T}, randn(N)), -1,  1) # [-1, 1]
+        W = clamp.(convert(Vector{T}, randn(N)), 0,  2) # [0, 2]
         @testset "Testing $f::$T" for f in [:exp, :abs, :ceil, :floor, :round,
                                             :trunc, :cos, :sin, :tan, :cosh, :sinh, :tanh,
                                             :cbrt, :erf, :erfc, :lgamma, :gamma]
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(X) ≈ fvml(X)
+            @test fb.(X) ≈ fvml(X)
         end
 
         @testset "Testing $f::$T" for f in [:sqrt, :log10, :acosh, :asinh, :log]
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(Y) ≈ fvml(Y)
+            @test fb.(Y) ≈ fvml(Y)
         end
 
-        # @testset "Testing $f::$T" for f in [:erfcinv]
-        #     @eval fb = $f
-        #     @eval fvml = Vectorize.VML.$f
-        #     @test fb(W) ≈ fvml(W)
-        # end
-        
-        @testset "Testing $f::$T" for f in [:acos, :asin, :atan, :atanh] #, :erfinv]
+        @testset "Testing $f::$T" for f in [:erfcinv]
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(Z) ≈ fvml(Z)
+            @test fb.(W) ≈ fvml(W)
+        end
+
+        @testset "Testing $f::$T" for f in [:acos, :asin, :atan, :atanh, :erfinv]
+            @eval fb = $f
+            @eval fvml = Vectorize.VML.$f
+            @test fb.(Z) ≈ fvml(Z)
         end
     end
 end
@@ -99,19 +91,19 @@ for T in [Complex{Float32}, Complex{Float64}]
                                             :atan, :atanh, :conj]
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(X) ≈ fvml(X)
+            @test fb.(X) ≈ fvml(X)
         end
 
         @testset "Testing $f::$T" for f in []
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(Y) ≈ fvml(Y)
+            @test fb.(Y) ≈ fvml(Y)
         end
-        
+
         @testset "Testing $f::$T" for f in []
             @eval fb = $f
             @eval fvml = Vectorize.VML.$f
-            @test fb(Z) ≈ fvml(Z)
+            @test fb.(Z) ≈ fvml(Z)
         end
     end
 end

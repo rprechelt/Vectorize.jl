@@ -1,4 +1,3 @@
-__precompile__()
 ##===----------------------------------------------------------------------===##
 ##                                   ACCELERATE.JL                            ##
 ##                                                                            ##
@@ -11,14 +10,10 @@ __precompile__()
 ##===----------------------------------------------------------------------===##
 module Vectorize
 
+using Libdl
 export @vectorize
 
-# Cross-version compatibility
-if VERSION < v"0.5.0-dev" # Julia v0.4
-    OS = OS_NAME
-else
-    OS = Sys.KERNEL
-end
+OS = Sys.KERNEL
 
 ## FUNCTION DICTIONARY
 functions = Dict()
@@ -51,12 +46,12 @@ if libyeppp_ != ""
     @eval const global libyeppp = libyeppp_
 else
     currdir = @__FILE__
-    @static if is_windows()
+    @static if Sys.iswindows()
         bindir = currdir[1:end-16]*"deps\\src\\yeppp\\binaries\\"
     else
         bindir = currdir[1:end-16]*"deps/src/yeppp/binaries/"
     end
-    
+
     if OS == :Darwin
         @eval const global libyeppp = bindir*"macosx/x86_64/libyeppp.dylib"
     elseif OS == :Linux
