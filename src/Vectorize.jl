@@ -109,7 +109,7 @@ macro replacebase(fs...)
                     Tdest = first(args)
                     Targs = makeargs(args[2:end])
                     e = quote
-                        (Base.copyto!)(dest::Array{$Tdest, N}, bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(dest, bc.args...)
+                        (Base.copyto!)(dest::$Tdest, bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(dest, bc.args...)
                     end
                 else
                     Targs = makeargs(args)
@@ -127,7 +127,7 @@ end
 function get_corresponding_f(fvec)
     fstr = string(fvec)
     if ismutating(fvec)
-        fstr = fstr[1:end-1]
+        fstr = chop(fstr)
     end
     if fstr == "add"
         fstr = "+"

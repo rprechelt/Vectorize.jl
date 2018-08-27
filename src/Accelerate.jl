@@ -33,8 +33,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     for (f, fa) in veclibfunctions
         name = string(f)
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             @doc """
             `$($f)(X::Vector{$($T)})`
@@ -61,8 +61,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     # 2 arg functions
     for f in (:copysign,)
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Array{$T}, Y::Array{$T})
                 size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
@@ -80,8 +80,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     # for some bizarre reason, vvpow/vvpowf reverse the order of arguments.
     for f in (:pow,)
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Array{$T}, Y::Array{$T})
                 size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
@@ -100,8 +100,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     # renamed 2 arg functions
     for (f,fa) in ((:rem,:fmod),(:fdiv,:div),(:atan,:atan2))
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Array{$T}, Y::Array{$T})
                 size(X) == size(Y) || throw(DimensionMismatch("Arguments must have same shape"))
@@ -119,8 +119,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     # two-arg return
     for f in (:sincos,)
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Array{$T})
                 out1 = similar(X)
@@ -138,8 +138,8 @@ for (T, suff) in ((Float64, ""), (Float32, "f"))
     # complex return
     for (f,fa) in ((:cis,:cosisin),)
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (Complex{T},T)), "Vectorize.Accelerate.$(f!)")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{Complex{T}},Array{T})), "Vectorize.Accelerate.$(f!)")
         @eval begin
             function ($f)(X::Array{$T})
                 out = Array{Complex{$T}}(undef, size(X))
@@ -172,8 +172,8 @@ for (T, suff) in ((Float64, "D"), (Float32, ""))
 
     for (f, fa, name) in vDSPfunctions
         f! = Symbol("$(f)!")
-        addfunction(functions, (f, (T,T)), "Vectorize.Accelerate.$f")
-        addfunction(functions, (f!, (T,T,T)), "Vectorize.Accelerate.$f!")
+        addfunction(functions, (f, (Array{T}, Array{T})), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f!, (Array{T}, Array{T}, Array{T})), "Vectorize.Accelerate.$f!")
         @eval begin
             @doc """
             `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`
@@ -216,7 +216,7 @@ const vDSPscalar = ((:sum,  :sve, "sum"), (:summag, :svemg, "sum-of-magnitudes")
 for (T, suff) in ((Float64, "D"), (Float32, ""))
 
     for (f, fa, name) in vDSPscalar
-        addfunction(functions, (f, (T,)), "Vectorize.Accelerate.$f")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.Accelerate.$f")
         @eval begin
             @doc """
             `$($f)(X::Vector{$($T)}, Y::Vector{$($T)})`

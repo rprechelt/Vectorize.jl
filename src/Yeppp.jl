@@ -72,7 +72,7 @@ for (f, fname, name) in ((:add, "Add", "addition"),  (:sub, "Subtract", "subtrac
         # generate Yeppp function name
         yepppname = string("yepCore_$(fname)_", identifier[argtype1], identifier[argtype2],
                            "_", identifier[returntype])
-        addfunction(functions, (f, (Float64,Float64)), "Vectorize.Yeppp.$f")
+        addfunction(functions, (f, (Array{Float64}, Array{Float64})), "Vectorize.Yeppp.$f")
         @eval begin
             @doc """
             `$($f)(X::Array{$($argtype1)}, Y::Array{$($argtype2)})`
@@ -97,8 +97,8 @@ for (f, fname) in [(:sin, "Sin"),  (:cos, "Cos"),  (:tan, "Tan"), (:log, "Log"),
     name = string(f)
     f! = Symbol("$(f)!")
     # register functions for build
-    addfunction(functions, (f, (Float64,)), "Vectorize.Yeppp.$f")
-    addfunction(functions, (f!, (Float64,Float64)), "Vectorize.Yeppp.$(f!)")
+    addfunction(functions, (f, (Array{Float64},)), "Vectorize.Yeppp.$f")
+    addfunction(functions, (f!, (Array{Float64}, Array{Float64})), "Vectorize.Yeppp.$(f!)")
     @eval begin
          @doc """
         `$($f)(X::Array{Float64})`
@@ -128,7 +128,7 @@ end
 for (T, Tscalar) in ((Float32, "S32f"), (Float64, "S64f"))
     for (f, fname, name) in [(:sum, "Sum", "sum"), (:sumsqr, "SumSquares", "sum-of-squares")]
         yepppname = string("yepCore_$(fname)_", identifier[T], "_", Tscalar)
-        addfunction(functions, (f, (T,)), "Vectorize.Yeppp.$f")
+        addfunction(functions, (f, (Array{T},)), "Vectorize.Yeppp.$f")
         @eval begin
             @doc """
             `$($f)(X::Array{$($T)})`

@@ -3,6 +3,39 @@ println("===== Testing Vectorize Benchmarked Functions =====")
 N = 1000
 Random.seed!(13)
 
+for T in (Float32, Float64)
+    @testset "@replacebase macro::$T" begin
+
+        @replacebase cis
+        @replacebase atan
+        @replacebase ^
+
+        X = rand(T, N)
+        Y = rand(T, N)
+        invcbrt = convert(T, -1/3)
+
+        @test Vectorize.cis(X) == cis.(X)
+        @test Vectorize.atan(X) == atan.(X)
+        @test Vectorize.atan(X, Y) == atan.(X, Y)
+        @test Vectorize.pow(X, Y) == X.^Y
+        @test Vectorize.pow(X, invcbrt) == X.^(invcbrt)
+
+        #test in-place
+        Zvec = similar(complex(X))
+        Zbc = similar(Zvec)
+        Vectorize.cis!(Zvec, X)
+        Zbc .= cis.(X)
+        @test Zbc == Zvec
+        Yvec = similar(X)
+        Ybc = similar(Yvec)
+        Vectorize.atan!(Yvec, X)
+        Ybc .= atan.(X)
+        @test Yvec == Ybc
+        Vectorize.pow!(Yvec, X, invcbrt)
+        Ybc .= X.^(invcbrt)
+        @test Yvec == Ybc
+    end
+end
 # Real Arithmetic
 # for T in [Float32, Float64]
 #     @testset "Vectorize: Basic Arithmetic::$T" begin
