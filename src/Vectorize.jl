@@ -11,7 +11,9 @@
 module Vectorize
 
 using Libdl
-export @vectorize
+using SpecialFunctions
+using Statistics
+export @vectorize, @replacebase
 
 OS = Sys.KERNEL
 
@@ -90,6 +92,83 @@ macro vectorize(ex)
         arg3 = ex.args[4]
         return esc(:($f($arg1, $arg2, $arg3)))
     end
+end
+
+# replacebase macro
+"""
+Replace all broadcasted base functions with benchmarked vectorized equivalents.
+Alternatively, if the user may pass the functions to overload instead.
+"""
+macro replacebase(fs...)
+    b = Expr(:block)
+    for ((fvec, args), vectorized_f) in functions
+        m, f = get_corresponding_f(fvec)
+        if isempty(fs) || f in fs
+            if m == :Base
+                if ismutating(fvec)
+                    Tdest = first(args)
+                    Targs = makeargs(args[2:end])
+                    e = quote
+                        (Base.copyto!)(dest::$Tdest, bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(dest, bc.args...)
+                    end
+                else
+                    Targs = makeargs(args)
+                    e = quote
+                        (Base.copy)(bc::Base.Broadcast.Broadcasted{Style, Axes, typeof($m.$f), $Targs}) where {Style, Axes, N} = (Vectorize.$fvec)(bc.args...)
+                    end
+                end
+                push!(b.args, e)
+            end
+        end
+    end
+    b
+end
+
+function get_corresponding_f(fvec)
+    fstr = string(fvec)
+    if ismutating(fvec)
+        fstr = chop(fstr)
+    end
+    if fstr == "add"
+        fstr = "+"
+    elseif fstr == "sub"
+        fstr = "-"
+    elseif fstr == "mul"
+        fstr = "*"
+    elseif fstr == "div"
+        fstr = "/"
+    elseif fstr == "rec"
+        fstr = "inv"
+    elseif fstr == "pow"
+        fstr = "^"
+    end
+
+    m = :Base
+    if fstr in ("cdfnorminv", "erf", "erfc", "erfi", "erfinv", "erfcinv", "cdfnorm")
+        m = :SpecialFunctions
+    elseif fstr in ("mean", )
+        m = :Statistics
+    elseif fstr in ("dot", )
+        m = :LinearAlgebra
+    elseif fstr in ("pow3o2", "frac", "mulbyconj", "tanpi", "fdiv", "invsqrt",
+                    "sqr", "pow2o3", "summag", "sumsqr", "invcbrt")
+        m = :None
+    end
+
+    fsym = Meta.parse(fstr)
+    return m, fsym
+end
+@inline ismutating(f) = last(string(f)) == '!'
+function makeargs(Targs)
+    arg_str = "Tuple{"
+    for T in Targs
+        arg_str *= "$T, "
+    end
+    arg_str = arg_str[1:end-2]
+    arg_str *= "}"
+    arg_str = replace(arg_str, " where N" => "")
+
+    return Meta.parse(arg_str)
 end
 
 # Include optimized functions

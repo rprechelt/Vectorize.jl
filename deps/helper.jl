@@ -11,7 +11,7 @@ IOstream `file`.
     N: the length of the vector to benchmark over.
 """
 function benchmarkSingleArgFunction(fname, fnames,
-                                    T::DataType, file::IOStream, N::Integer)
+                                    T, file::IOStream, N::Integer)
 
     # dictionary to store elpased values
     val = Dict()
@@ -20,7 +20,7 @@ function benchmarkSingleArgFunction(fname, fnames,
     # Iterate over all functions
     for fstr in fnames
         f = eval(Meta.parse(fstr)) # convert string to function
-        X = randn(T, N) # function arguments
+        X = randn(eltype(T), N) # function arguments
         f(X) # force compilation
         time = 0
         for i in 1:10 # benchmark ten times
@@ -42,11 +42,11 @@ function benchmarkSingleArgFunction(fname, fnames,
     end
 
     # write chosen file into IOStream
-    write(file, "\n$(fname)(X::Array{$T}) = $(fbest)(X)\n")
+    write(file, "\n$(fname)(X::$T) = $(fbest)(X)\n")
     # docs = @doc fbest
     # write(file, "\n\"\"\"\n", docs, "\n\"\"\"\n")
     # write(file, "$(fname)(X::Array{$T}) = $(fbest)(X)\n")
-    println("BENCHMARK: $(fname)(Array{$T}) mapped to $(fbest)()\n")
+    println("BENCHMARK: $(fname)($T) mapped to $(fbest)()\n")
 end
 
 
@@ -63,17 +63,17 @@ IOstream `file`.
     N: the length of the vector to benchmark over.
 """
 function benchmarkTwoArgFunction(fname, fnames,
-                                 T::Tuple{DataType, DataType}, file::IOStream, N::Integer)
+                                 T, file::IOStream, N::Integer)
 
     # dictionary of elapsed times for each implementation
     val = Dict()
-    println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])})")
+    println("TESTING: $(fname)($(T[1]), $(T[2]))")
 
     # Iterate over all functions
     for fstr in fnames
         f = eval(Meta.parse(fstr)) # convert string to function
-        X = randn(T[1], N) # function arguments
-        Y = randn(T[2], N) # function arguments
+        X = randn(eltype(T[1]), N) # function arguments
+        Y = randn(eltype(T[2]), N) # function arguments
         f(X, Y) # force compilation
         time = 0
         for i in 1:10 # benchmark ten times
@@ -95,8 +95,8 @@ function benchmarkTwoArgFunction(fname, fnames,
     end
 
     # write result into IOStream
-    write(file, "\n$(fname)(X::Array{$(T[1])}, Y::Array{$(T[2])}) = $(fbest)(X, Y)\n")
-    println("BENCHMARK: $(fname)(Array{$(T[1])}, Array{$(T[2])}) mapped to $(fbest)()\n")
+    write(file, "\n$(fname)(X::$(T[1]), Y::$(T[2])) = $(fbest)(X, Y)\n")
+    println("BENCHMARK: $(fname)($(T[1]), $(T[2])) mapped to $(fbest)()\n")
 end
 
 
@@ -113,18 +113,18 @@ IOstream `file`.
     N: the length of the vector to benchmark over.
 """
 function benchmarkThreeArgFunction(fname, fnames,
-                                   T::Tuple{DataType, DataType, DataType}, file::IOStream, N::Integer)
+                                   T, file::IOStream, N::Integer)
 
     # dictionary to store elapsed values
     val = Dict()
-    println("TESTING: $(fname)(Array{$(T[1])}, Array{$(T[2])}, Array{$(T[3])})")
+    println("TESTING: $(fname)($(T[1]), $(T[2]), $(T[3]))")
 
     # Iterate over all functions
     for fstr in fnames
         f = eval(Meta.parse(fstr)) # convert string to function
-        X = randn(T[1], N) # function arguments
-        Y = randn(T[2], N) # function arguments
-        Z = randn(T[3], N) # function arguments
+        X = randn(eltype(T[1]), N) # function arguments
+        Y = randn(eltype(T[2]), N) # function arguments
+        Z = randn(eltype(T[3]), N) # function arguments
         f(X, Y, Z) # force compilation
         time = 0
         for i in 1:10 # benchmark 10 times
@@ -146,8 +146,8 @@ function benchmarkThreeArgFunction(fname, fnames,
     end
 
         # write result into IOStream
-    write(file, "\n$(fname)(X::Array{$(T[1])}, Y::Array{$(T[2])}, Z::Array{$(T[3])}) = $(fbest)(X, Y, Z)\n")
-    println("BENCHMARK: $(fname)(Array{$(T[1])}, Array{$(T[2])}, Array{$(T[3])}) mapped to $(fbest)()\n")
+    write(file, "\n$(fname)(X::$(T[1]), Y::$(T[2]), Z::$(T[3])) = $(fbest)(X, Y, Z)\n")
+    println("BENCHMARK: $(fname)($(T[1]), $(T[2]), $(T[3])) mapped to $(fbest)()\n")
 end
 
 """
