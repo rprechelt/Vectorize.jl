@@ -539,7 +539,7 @@ Functions
 
 .. function:: pow3o2(X)
 
-	      Raises each element of a vector to the `3/3` power::
+	      Raises each element of a vector to the `3/2` power::
 
 		VML(X::Array{Float32})
 		VML(X::Array{Float64})
@@ -590,21 +590,21 @@ Functions
 
 .. function:: invsqrt(X)
 
-	      Computes the element-wise square root of a vector minus one::
+	      Computes the element-wise inverse square root of a vector::
 
 		VML(X::Array{Float32})
 		VML(X::Array{Float64})
 
 .. function:: invsqrt!(result, X)
 
-	      Computes the element-wise square root of a vector and stores it in result::
+	      Computes the element-wise inverse square root of a vector and stores it in result::
 
 		VML(X::Array{Float32})
 		VML(X::Array{Float64})
 
 .. function:: invsqrt(X)
 
-	      Computes the element-wise square root of a vector minus one::
+	      Computes the element-wise inverse quare root of a vector::
 
 		VML(X::Array{Float32})
 		VML(X::Array{Float64})
@@ -613,7 +613,7 @@ Functions
 
 .. function:: invsqrt!(result, X)
 
-	      Computes the element-wise square root of a vector and stores it in result::
+	      Computes the element-wise inverse square root of a vector and stores it in result::
 
 		VML(X::Array{Float32})
 		VML(X::Array{Float64})
