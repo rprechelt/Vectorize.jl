@@ -26,13 +26,16 @@ This macro provides an easy method for code to be quickly converted to use Vecto
 
 Vectorize.jl also provides a `@replacebase` macro that automatically overloads base broadcasting calls into the fastest vectorized equivalent available.
 
-   X.^(-1/3)  # Standard Julia broadcast implementation
-   Z .= cis.(X)   # Standard Julia in-place broadcast implementation
-   @replacebase cis # Overloads both in-place and out-of-place broadcast calls to cis, provided cis is not fused in the broadcast
-   @replacebase ^ # Note: ^ (pow) is currently only available for VML
-   X.^(-1/3)  # This call now uses Vectorize.pow(X, -1/3)
-   Z .= cis.(X)   # This call now uses Vectorize.cis!
-   @replacebase # This will overload all functions that were benchmarked by Vectorize.jl
+    X.^(-1/3)  # Standard Julia broadcast implementation
+    Z .= cis.(X)   # Standard Julia in-place broadcast implementation
+    
+    @replacebase cis # Overloads both in-place and out-of-place broadcast calls to cis, provided cis is not fused in the broadcast
+    @replacebase ^ # Note: ^ (pow) is currently only available for VML
+    
+    X.^(-1/3)  # This call now uses Vectorize.pow(X, -1/3)
+    Z .= cis.(X)   # This call now uses Vectorize.cis!
+    
+    @replacebase # This will overload all functions that were benchmarked by Vectorize.jl
 
 This macro allows pre-existing code to take advantage of optimized vectorized implementations with only a line of code. Note that if the broadcast call is multiple function calls fused together, the Vectorize.jl version will not be used, so some care must be taken to write simple broadcasts.
 
